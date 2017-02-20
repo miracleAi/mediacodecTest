@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_decoder_play"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SurfaceView
+        android:id="@+id/surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <Button
+        android:id="@+id/play_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="transcoder"
+        android:layout_margin="15dp"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:background="@color/colorPrimary"/>
+    <Button
+        android:id="@+id/silence_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="silence"
+        android:layout_margin="15dp"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:layout_toRightOf="@id/play_btn"
+        android:background="@color/colorPrimary"/>
+</RelativeLayout>

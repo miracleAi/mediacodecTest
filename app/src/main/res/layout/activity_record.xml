@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_record2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.percent.PercentRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+        <ffmpeg.egg.io.mediacodectest.recordold.view.RecordCameraView
+            android:id="@+id/glsurfaceview_camera"
+            android:layout_width="match_parent"
+            app:layout_aspectRatio="178%"
+            android:layout_centerInParent="true"
+            />
+        </android.support.percent.PercentRelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            android:background="@android:color/transparent">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_beauty"
+                android:src="@drawable/btn_camera_beauty"/>
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:id="@+id/btn_camera_switch"
+                android:layout_height="wrap_content"
+                android:src="@drawable/selector_rewardcamera"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="record"
+                android:id="@+id/record"/>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
