@@ -4,9 +4,9 @@ import android.graphics.SurfaceTexture;
 import android.view.Surface;
 
 import ffmpeg.egg.io.mediacodectest.edit.render.FilterRender;
-import ffmpeg.egg.io.mediacodectest.edit.utils.ImageTransformationMatrix;
 import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
+import ffmpeg.egg.io.mediacodectest.openglutils.ImageTransformationMatrix;
 
 /**
  * Created by zhulinping on 16/11/21.

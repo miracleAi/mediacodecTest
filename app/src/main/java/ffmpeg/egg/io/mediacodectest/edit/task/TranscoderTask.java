@@ -1,6 +1,8 @@
 package ffmpeg.egg.io.mediacodectest.edit.task;
 
 
+import android.content.Context;
+
 import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 
@@ -15,11 +17,13 @@ public class TranscoderTask implements Runnable{
     private GPUImageFilter mFilter;
     private boolean mSilence = false;
     private String mOutput;
+    private Context mContext;
 
-    public TranscoderTask(TranscodingResources resoueces, String path,String output){
+    public TranscoderTask(Context context,TranscodingResources resoueces, String path,String output){
         mResourdes = resoueces;
         mPath = path;
         mOutput = output;
+        mContext = context;
     }
     public void setmFilter(GPUImageFilter filter){
         mFilter = filter;
@@ -29,7 +33,7 @@ public class TranscoderTask implements Runnable{
     }
     @Override
     public void run() {
-        mTransCoder = new Transcoder(mResourdes,mPath,mOutput);
+        mTransCoder = new Transcoder(mContext,mResourdes,mPath,mOutput);
         mTransCoder.setFilter(mFilter);
         mTransCoder.setSilence(mSilence);
         mTransCoder.transcoder();

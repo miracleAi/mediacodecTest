@@ -1,11 +1,14 @@
 package ffmpeg.egg.io.mediacodectest.edit.task;
 
+import android.content.Context;
+import android.content.Intent;
 import android.media.MediaCodecInfo;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 
 import java.io.IOException;
 
+import ffmpeg.egg.io.mediacodectest.activity.EditActivity;
 import ffmpeg.egg.io.mediacodectest.edit.decoder.AudioDecoder;
 import ffmpeg.egg.io.mediacodectest.edit.decoder.VideoDecoder;
 import ffmpeg.egg.io.mediacodectest.edit.encoder.AudioEncoder;
@@ -38,10 +41,12 @@ public class Transcoder {
     private Muxer mMuxer;
     private boolean mIsSilence = false;
     private TranscodingResources mRecources;
+    private Context mContext;
 
-    public Transcoder(TranscodingResources recources, String path,String output) {
+    public Transcoder(Context context,TranscodingResources recources, String path, String output) {
         mFilePath = path;
         mRecources = recources;
+        mContext = context;
         mMuxer = new Muxer(output);
         mAudioExtractor = new AudioExtractor(path, new AudioExtractorDone());
         mVideoExtractor = new VideoExtractor(path, new VideoExtractorDone());
@@ -162,6 +167,7 @@ public class Transcoder {
 
         @Override
         public void done() {
+            mContext.sendBroadcast(new Intent(EditActivity.ENCODE_DONE));
             mAudioEncoderDone = true;
             mAudioEncoder.release();
             mAudioDecoder.release();
@@ -176,6 +182,7 @@ public class Transcoder {
 
         @Override
         public void done() {
+            mContext.sendBroadcast(new Intent(EditActivity.ENCODE_DONE));
             mVideoEncoderDone = true;
             mVideoEncoder.release();
             mVideoDecoder.release();

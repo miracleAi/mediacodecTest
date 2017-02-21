@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 
 import java.io.File;
@@ -25,7 +24,6 @@ import ffmpeg.egg.io.mediacodectest.edit.task.RenderTask;
 import ffmpeg.egg.io.mediacodectest.edit.task.TranscoderTask;
 import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.edit.utils.VideoMetadataReader;
-import ffmpeg.egg.io.mediacodectest.filters.CombineFilter;
 import ffmpeg.egg.io.mediacodectest.openglutils.FilterFactory;
 
 public class EditActivity extends AppCompatActivity {
@@ -83,7 +81,7 @@ public class EditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String outputVideoPath = Environment.getExternalStorageDirectory().toString()
                         + "/dcim/camera/" + System.currentTimeMillis() + ".mp4";
-                TranscoderTask transcoder = new TranscoderTask(mResoureces, mFilePath, outputVideoPath);
+                TranscoderTask transcoder = new TranscoderTask(EditActivity.this,mResoureces, mFilePath, outputVideoPath);
                 mExtractorBtn.setText("transcoding……");
                 transcoder.setmFilter(FilterFactory.getFilter(EditActivity.this,
                         FilterFactory.volueOfFilter(index%9)));

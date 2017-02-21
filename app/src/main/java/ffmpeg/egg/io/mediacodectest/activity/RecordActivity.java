@@ -147,7 +147,7 @@ public class RecordActivity extends AppCompatActivity {
                 cameraView.setVideoEncoder(null);
                 cameraView.stopCamera();
                 if (savePath != null && !"".equals(savePath)) {
-                    Intent intent = new Intent(RecordActivity.this, FilterTestActivity.class);
+                    Intent intent = new Intent(RecordActivity.this, EditActivity.class);
                     startActivity(intent);
                     finish();
                 }

@@ -128,7 +128,7 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
                 cameraView.setVideoEncoder(null);
                 cameraView.stopCamera();
                 if (savePath != null && !"".equals(savePath)) {
-                    Intent intent = new Intent(BeautyActivity.this, EncoderOpenglActiivity.class);
+                    Intent intent = new Intent(BeautyActivity.this, EditActivity.class);
                     startActivity(intent);
                     finish();
                 }
