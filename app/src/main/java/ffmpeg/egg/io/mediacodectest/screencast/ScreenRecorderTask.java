@@ -20,8 +20,8 @@ public class ScreenRecorderTask implements Runnable {
     private MediaProjection mMediaProjection;
     private Muxer mMuxer;
     private VideoRecorder mVideoRecoder;
+    private AudioRecorder mAudioRecoder;
     private AtomicBoolean mQuit = new AtomicBoolean(false);
-
 
     public ScreenRecorderTask(int width, int height, int bitrate, int dpi, MediaProjection mp, String dstPath) {
         mWidth = width;
@@ -40,6 +40,9 @@ public class ScreenRecorderTask implements Runnable {
     }
 
     public void release() {
+        if(mAudioRecoder != null){
+            mAudioRecoder.release();
+        }
         if (mVideoRecoder != null) {
             mVideoRecoder.release();
         }
@@ -57,7 +60,9 @@ public class ScreenRecorderTask implements Runnable {
         try {
             mMuxer = new Muxer(mDstPath);
             mVideoRecoder = new VideoRecorder(mWidth, mHeight, mBitRate, mDpi, mMediaProjection,mMuxer);
+            mAudioRecoder = new AudioRecorder(mMuxer);
             while(!mQuit.get()){
+                mAudioRecoder.audioRecord();
                 mVideoRecoder.videoEncoder();
             }
         } finally {

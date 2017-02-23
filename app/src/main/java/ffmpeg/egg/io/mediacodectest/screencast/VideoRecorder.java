@@ -34,7 +34,7 @@ public class VideoRecorder {
 
     public VideoRecorder(int width, int height, int bitrate, int mDpi, MediaProjection mediaProjection, Muxer muxer){
         mMuxer = muxer;
-        mMuxer.setmIsSilence(true);
+        //mMuxer.setmIsSilence(true);
         MediaFormat format = MediaFormat.createVideoFormat(MIME_TYPE, width, height);
         format.setInteger(MediaFormat.KEY_COLOR_FORMAT,
                 MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
@@ -69,7 +69,8 @@ public class VideoRecorder {
             }
         } else if (index >= 0) {
             if (!mMuxer.isStarted()) {
-                throw new IllegalStateException("MediaMuxer dose not call addTrack(format) ");
+                return;
+                //throw new IllegalStateException("MediaMuxer dose not call addTrack(format) ");
             }
             encodeToVideoTrack(index);
 
