@@ -11,20 +11,27 @@ import android.view.View;
 import android.widget.Button;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import ffmpeg.egg.io.mediacodectest.R;
 import ffmpeg.egg.io.mediacodectest.screencast.ScreenRecorder;
+import ffmpeg.egg.io.mediacodectest.screencast.ScreenRecorderTask;
 
 public class ScreenRecordActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 1;
     private MediaProjectionManager mMediaProjectionManager;
-    private ScreenRecorder mRecorder;
+    //private ScreenRecorder mRecorder;
+    private ScreenRecorderTask mRecorder;
+    private ExecutorService mExecutor;
     private Button mScreenBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen_record);
+        mExecutor = Executors.newCachedThreadPool();
         initView();
     }
 
@@ -49,7 +56,7 @@ public class ScreenRecordActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE){
+        if (requestCode == REQUEST_CODE) {
             MediaProjection mediaProjection = mMediaProjectionManager.getMediaProjection(resultCode, data);
             if (mediaProjection == null) {
                 Log.e("@@", "media projection is null");
@@ -60,8 +67,10 @@ public class ScreenRecordActivity extends AppCompatActivity {
             File file = new File(Environment.getExternalStorageDirectory(),
                     "record-" + width + "x" + height + "-" + System.currentTimeMillis() + ".mp4");
             final int bitrate = 6000000;
-            mRecorder = new ScreenRecorder(width, height, bitrate, 1, mediaProjection, file.getAbsolutePath());
-            mRecorder.start();
+            /*mRecorder = new ScreenRecorder(width, height, bitrate, 1, mediaProjection, file.getAbsolutePath());
+            mRecorder.start();*/
+            mRecorder = new ScreenRecorderTask(width, height, bitrate, 1, mediaProjection, file.getAbsolutePath());
+            mExecutor.execute(mRecorder);
             mScreenBtn.setText("Stop Recorder");
         }
     }
