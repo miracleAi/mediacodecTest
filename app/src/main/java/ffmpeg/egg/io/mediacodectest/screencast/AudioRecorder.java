@@ -92,14 +92,11 @@ public class AudioRecorder {
             inputBuffer.clear();
             if (buffer != null) {
                 inputBuffer.put(buffer);
-                Log.d("mytest", "audio input buffer");
             }
             if (length <= 0) {
-                Log.d("mytest", "audio encoder done");
                 mEncoder.queueInputBuffer(inputBufferIndex, 0, 0,
                         presentationTimeUs, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
             } else {
-                Log.d("mytest", "audio encoder queuein");
                 mEncoder.queueInputBuffer(inputBufferIndex, 0, length,
                         presentationTimeUs, 0);
             }
