@@ -1,27 +1,20 @@
+/*
 package ffmpeg.egg.io.mediacodectest.activity;
 
-import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import java.io.File;
-import java.io.IOException;
 
 import ffmpeg.egg.io.mediacodectest.R;
 import ffmpeg.egg.io.mediacodectest.filters.CombineFilter;
-import ffmpeg.egg.io.mediacodectest.record.encoder.MediaAudioEncoder;
-import ffmpeg.egg.io.mediacodectest.record.encoder.MediaEncoder;
-import ffmpeg.egg.io.mediacodectest.record.encoder.MediaMuxerWrapper;
-import ffmpeg.egg.io.mediacodectest.record.encoder.MediaVideoEncoder;
-import ffmpeg.egg.io.mediacodectest.record.view.RecordCameraView;
+import ffmpeg.egg.io.mediacodectest.record.view.BeautyRecordCameraView;
 
 public class BeautyActivity extends AppCompatActivity implements View.OnClickListener {
-    private RecordCameraView cameraView;
-    private MediaMuxerWrapper mMuxer;
+    private BeautyRecordCameraView cameraView;
     String savePath = "";
     private static final String DIR_NAME = "ffmpeg";
 
@@ -41,7 +34,7 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.btn_camera_switch).setOnClickListener(this);
         findViewById(R.id.btn_beauty).setOnClickListener(this);
         findViewById(R.id.record).setOnClickListener(this);
-        cameraView = (RecordCameraView) findViewById(R.id.glsurfaceview_camera);
+        cameraView = (BeautyRecordCameraView) findViewById(R.id.glsurfaceview_camera);
         init();
     }
 
@@ -60,86 +53,12 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
                 cameraView.setFilter(filter);
                 break;
             case R.id.record:
-                if (mMuxer == null) {
-                    startRecording();
-                } else {
-                    stopRecording();
-                }
+
                 break;
         }
     }
-
-    /**
-     * start resorcing
-     * This is a sample project and call this on UI thread to avoid being complicated
-     * but basically this should be called on private thread because prepareing
-     * of encoder is heavy work
-     */
-    private void startRecording() {
-        if (DEBUG) Log.v(TAG, "startRecording:");
-        try {
-            savePath = getCaptureFile(Environment.DIRECTORY_MOVIES, ".mp4").toString();
-            mMuxer = new MediaMuxerWrapper(savePath);    // if you record audio only, ".m4a" is also OK.
-            if (true) {
-                // for video capturing
-                new MediaVideoEncoder(BeautyActivity.this, mMuxer, mMediaEncoderListener, 576, 1024);
-            }
-            if (true) {
-                // for audio capturing
-                new MediaAudioEncoder(mMuxer, mMediaEncoderListener);
-            }
-            mMuxer.prepare();
-            mMuxer.startRecording();
-        } catch (final IOException e) {
-            Log.e(TAG, "startCapture:", e);
-        }
-    }
-
-    /**
-     * request stop recording
-     */
-    private void stopRecording() {
-        if (DEBUG) Log.v(TAG, "stopRecording:mMuxer=" + mMuxer);
-        if (mMuxer != null) {
-            mMuxer.stopRecording();
-            mMuxer = null;
-            // you should not wait here
-        }
-    }
-
-    private static final boolean DEBUG = false;    // TODO set false on release
-    private static final String TAG = "CameraFragment";
-
-    /**
-     * callback methods from encoder
-     */
-    private final MediaEncoder.MediaEncoderListener mMediaEncoderListener = new MediaEncoder.MediaEncoderListener() {
-        @Override
-        public void onPrepared(final MediaEncoder encoder) {
-            if (DEBUG) Log.v(TAG, "onPrepared:encoder=" + encoder);
-            if (encoder instanceof MediaVideoEncoder)
-                cameraView.setVideoEncoder((MediaVideoEncoder) encoder);
-        }
-
-        @Override
-        public void onStopped(final MediaEncoder encoder) {
-            if (DEBUG) Log.v(TAG, "onStopped:encoder=" + encoder);
-            if (encoder instanceof MediaVideoEncoder) {
-                cameraView.setVideoEncoder(null);
-                cameraView.stopCamera();
-                if (savePath != null && !"".equals(savePath)) {
-                    Intent intent = new Intent(BeautyActivity.this, EditActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-
-        }
-    };
-
     public File getCaptureFile(final String type, final String ext) {
         final File dir = new File(Environment.getExternalStoragePublicDirectory(type), DIR_NAME);
-        Log.d(TAG, "path=" + dir.toString());
         dir.mkdirs();
         if (dir.canWrite()) {
             return new File(dir, System.currentTimeMillis() + ext);
@@ -152,4 +71,4 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
         super.onStop();
         cameraView.stopCamera();
     }
-}
+}*/

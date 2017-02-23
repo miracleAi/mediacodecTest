@@ -16,6 +16,8 @@ import ffmpeg.egg.io.mediacodectest.edit.encoder.VideoEncoder;
 import ffmpeg.egg.io.mediacodectest.edit.extractor.AudioExtractor;
 import ffmpeg.egg.io.mediacodectest.edit.extractor.VideoExtractor;
 import ffmpeg.egg.io.mediacodectest.edit.muxer.Muxer;
+import ffmpeg.egg.io.mediacodectest.edit.utils.EncoderConfiguration;
+import ffmpeg.egg.io.mediacodectest.edit.utils.MimeTools;
 import ffmpeg.egg.io.mediacodectest.edit.utils.StageDoneCallback;
 import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
@@ -42,16 +44,20 @@ public class Transcoder {
     private boolean mIsSilence = false;
     private TranscodingResources mRecources;
     private Context mContext;
+    private EncoderConfiguration mAuidoConfig;
+    private EncoderConfiguration mVidoConfig;
 
-    public Transcoder(Context context,TranscodingResources recources, String path, String output) {
+    public Transcoder(Context context,TranscodingResources recources, String path,String output) {
         mFilePath = path;
-        mRecources = recources;
         mContext = context;
+        mRecources = recources;
         mMuxer = new Muxer(output);
         mAudioExtractor = new AudioExtractor(path, new AudioExtractorDone());
         mVideoExtractor = new VideoExtractor(path, new VideoExtractorDone());
-        mAudioEncoder = new AudioEncoder(mMuxer, getAudioMediaFormate(), new AudioEncoderDoneCallback());
-        mVideoEncoder = new VideoEncoder(mMuxer, getVideoFormate(), new VideoEncoderCallback());
+        initAuidoConfig(mAudioExtractor.getFormat());
+        mAudioEncoder = new AudioEncoder(mMuxer, mAuidoConfig, new AudioEncoderDoneCallback());
+        initVideoConfig(recources);
+        mVideoEncoder = new VideoEncoder(mMuxer, mVidoConfig, new VideoEncoderCallback());
         mAudioDecoder = new AudioDecoder(mAudioExtractor.getFormat(), new AudioDecodenDone());
         mVideoDecoder = new VideoDecoder(mVideoExtractor.getFormat(), recources, new VideoDeocderDone());
         mAudioExtractor.setDecoder(mAudioDecoder.getmDecoder());
@@ -75,37 +81,25 @@ public class Transcoder {
         }
     }
 
-    private MediaFormat getAudioMediaFormate() {
-        MediaExtractor extractor = new MediaExtractor();
-        try {
-            extractor.setDataSource(mFilePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        MediaFormat audioFormat = null;
-        for (int i = 0; i < extractor.getTrackCount(); i++) {
-            MediaFormat format = extractor.getTrackFormat(i);
-            if (format.getString(MediaFormat.KEY_MIME).startsWith("audio/")) {
-                audioFormat = format;
-                break;
-            }
-        }
+    private void initAuidoConfig(MediaFormat format) {
         MediaFormat paramString = MediaFormat.createAudioFormat("audio/mp4a-latm",
-                audioFormat.getInteger("sample-rate"),
-                audioFormat.getInteger("channel-count"));
+                MimeTools.getInstance().getAudioSampleRate(format),
+                MimeTools.getInstance().getAudioChannelCount(format));
         paramString.setInteger("bitrate", 57344);
-        ;
-        return paramString;
+
+        mAuidoConfig = new EncoderConfiguration("audio/mp4a-latm", paramString);
     }
 
-    private MediaFormat getVideoFormate() {
-        MediaFormat format = MediaFormat.createVideoFormat("video/avc", mRecources.getVideoWidth(), mRecources.getVideoHeight());
+
+    private void initVideoConfig(TranscodingResources resources) {
+        MediaFormat format = MediaFormat.createVideoFormat("video/avc", resources.getVideoWidth(), resources.getVideoHeight());
         format.setInteger(MediaFormat.KEY_COLOR_FORMAT,
                 MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
-        format.setInteger(MediaFormat.KEY_BIT_RATE, 1300000);
+        format.setInteger(MediaFormat.KEY_BIT_RATE, 1500000);
         format.setInteger(MediaFormat.KEY_FRAME_RATE, 30);
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 10);
-        return format;
+
+        mVidoConfig = new EncoderConfiguration("video/avc", format);
     }
 
     public void transcoder() {

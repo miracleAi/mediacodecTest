@@ -12,7 +12,7 @@
             android:layout_height="match_parent"
             >
 
-            <ffmpeg.egg.io.mediacodectest.record.view.RecordCameraView
+            <ffmpeg.egg.io.mediacodectest.record.view.BeautyRecordCameraView
                 android:id="@+id/glsurfaceview_camera"
                 android:layout_width="match_parent"
                 app:layout_aspectRatio="178%"

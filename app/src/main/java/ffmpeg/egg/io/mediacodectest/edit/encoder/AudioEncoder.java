@@ -6,6 +6,7 @@ import android.media.MediaFormat;
 import java.io.IOException;
 
 import ffmpeg.egg.io.mediacodectest.edit.muxer.Muxer;
+import ffmpeg.egg.io.mediacodectest.edit.utils.EncoderConfiguration;
 import ffmpeg.egg.io.mediacodectest.edit.utils.MimeTools;
 import ffmpeg.egg.io.mediacodectest.edit.utils.StageDoneCallback;
 
@@ -19,16 +20,19 @@ public class AudioEncoder extends BaseEncoder {
         super(muxer, callback);
     }
 
-    public AudioEncoder(Muxer muxer, MediaFormat format, StageDoneCallback callback) {
+    public AudioEncoder(Muxer muxer, EncoderConfiguration config, StageDoneCallback callback) {
         this(muxer, callback);
         try {
-            mEncoder = MediaCodec.createEncoderByType(MimeTools.getInstance().getMimeTypeFor(format));
-            mEncoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+            mEncoder = MediaCodec.createByCodecName(MimeTools.getInstance()
+                    .selectCodec(config.getMimeType()).getName());
+            //mEncoder = MediaCodec.createEncoderByType(MimeTools.getInstance().getMimeTypeFor(format));
+            mEncoder.configure(config.getFormat(), null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
             mEncoder.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public int addOrRetrieveMixerTrack(MediaFormat paramMediaFormat) {

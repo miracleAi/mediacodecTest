@@ -55,7 +55,9 @@ public class AudioDecoder extends BaseDecoder{
         ByteBuffer localByteBuffer = inputBuffers[index];
         int size = mBufferInfo.size;
         if (size >= 0) {
-            ByteBuffer buffer = outputBuffers[mFrameToProcess];
+            ByteBuffer buffer = outputBuffers[mFrameToProcess].duplicate();
+            buffer.position(mBufferInfo.offset);
+            buffer.limit(mBufferInfo.offset + mBufferInfo.size);
             localByteBuffer.position(0);
             localByteBuffer.put(buffer);
             mEncoder.queueInputBuffer(index, 0, size, mBufferInfo.presentationTimeUs, mBufferInfo.flags);

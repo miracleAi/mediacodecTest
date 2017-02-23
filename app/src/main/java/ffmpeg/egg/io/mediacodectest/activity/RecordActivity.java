@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import java.io.File;
 import java.io.IOException;
 
+import ffmpeg.egg.io.mediacodectest.MainActivity;
 import ffmpeg.egg.io.mediacodectest.R;
 import ffmpeg.egg.io.mediacodectest.recordold.encoder.MediaAudioEncoder;
 import ffmpeg.egg.io.mediacodectest.recordold.encoder.MediaEncoder;
@@ -148,6 +149,7 @@ public class RecordActivity extends AppCompatActivity {
                 cameraView.stopCamera();
                 if (savePath != null && !"".equals(savePath)) {
                     Intent intent = new Intent(RecordActivity.this, EditActivity.class);
+                    intent.putExtra(MainActivity.PATH,savePath);
                     startActivity(intent);
                     finish();
                 }

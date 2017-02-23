@@ -1,3 +1,4 @@
+/*
 package ffmpeg.egg.io.mediacodectest.record.view;
 
 import android.content.Context;
@@ -26,11 +27,13 @@ import ffmpeg.egg.io.mediacodectest.filters.MagicLookupFilter;
 import ffmpeg.egg.io.mediacodectest.openglutils.OpenGlUtils;
 import ffmpeg.egg.io.mediacodectest.record.encoder.MediaVideoEncoder;
 
+*/
 /**
  * Created by zhulinping on 16/12/21.
- */
+ *//*
 
-public class RecordCameraView extends GLSurfaceView implements GLSurfaceView.Renderer {
+
+public class BeautyRecordCameraView extends GLSurfaceView implements GLSurfaceView.Renderer {
     private Camera mCamera;
     private int mCamId = -1;
     private int mPreviewRotation = 90;
@@ -48,7 +51,7 @@ public class RecordCameraView extends GLSurfaceView implements GLSurfaceView.Ren
     private int mEncoderHeight;
     private MediaVideoEncoder mEncoder;
     private GPUImageFilter mFilter;
-    public RecordCameraView(Context context, AttributeSet attrs) {
+    public BeautyRecordCameraView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
         setEGLContextClientVersion(2);
@@ -58,7 +61,7 @@ public class RecordCameraView extends GLSurfaceView implements GLSurfaceView.Ren
         mFilter = new MagicLookupFilter(mContext, "filter/lookup_mono.png");
         //mFilter = new CombineFilter(mContext);
     }
-    public RecordCameraView(Context context) {
+    public BeautyRecordCameraView(Context context) {
         this(context, null);
     }
 
@@ -111,7 +114,8 @@ public class RecordCameraView extends GLSurfaceView implements GLSurfaceView.Ren
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         surfaceTexture.updateTexImage();
-       /* if (mResources.getVideoRotation() == 0) {
+       */
+/* if (mResources.getVideoRotation() == 0) {
             mSTMatrix = new ImageTransformationMatrix().adjustForTranscoderTransformation();
             //mSurfaceTexture.getTransformMatrix(mSTMatrix);
         } else if (mResources.getVideoRotation() == 90) {
@@ -120,7 +124,8 @@ public class RecordCameraView extends GLSurfaceView implements GLSurfaceView.Ren
             mSTMatrix = new ImageTransformationMatrix().rotate180Degrees();
         } else {
             mSTMatrix = new ImageTransformationMatrix().rotateLeft();
-        }*/
+        }*//*
+
         surfaceTexture.getTransformMatrix(mSTMatrix);
         mRender.onDrawFrame(mSTMatrix);
         if(mEncoder != null){
@@ -320,3 +325,4 @@ public class RecordCameraView extends GLSurfaceView implements GLSurfaceView.Ren
 
     }
 }
+*/
