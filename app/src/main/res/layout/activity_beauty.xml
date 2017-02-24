@@ -44,6 +44,12 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="filter"
+                android:padding="10dp"
+                android:id="@+id/filter_btn"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="record"
                 android:padding="10dp"
                 android:id="@+id/record"/>

@@ -21,6 +21,8 @@ import javax.microedition.khronos.opengles.GL10;
 
 import ffmpeg.egg.io.mediacodectest.filterrecord.filters.BeautyFilter;
 import ffmpeg.egg.io.mediacodectest.filterrecord.filters.BeautyRender;
+import ffmpeg.egg.io.mediacodectest.filters.BlendFilter;
+import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 import ffmpeg.egg.io.mediacodectest.openglutils.ImageTransformationMatrix;
 import ffmpeg.egg.io.mediacodectest.openglutils.OpenGlUtils;
 import ffmpeg.egg.io.mediacodectest.recordold.CameraInputFilter;
@@ -319,5 +321,15 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
                 (float) mPreviewWidth / mPreviewHeight : (float) mPreviewHeight / mPreviewWidth;
 
         return new int[]{mPreviewWidth, mPreviewHeight};
+    }
+    public void setFilter(final GPUImageFilter filter){
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                if(mRender != null){
+                    mRender.setFilter(filter,false);
+                }
+            }
+        });
     }
 }

@@ -8,6 +8,7 @@ import android.view.View;
 
 import ffmpeg.egg.io.mediacodectest.R;
 import ffmpeg.egg.io.mediacodectest.filterrecord.view.FilterRecordView;
+import ffmpeg.egg.io.mediacodectest.filters.BlendFilter;
 
 public class BeautyActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -27,11 +28,13 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
         mFilterView = (FilterRecordView) findViewById(R.id.filter_view);
         findViewById(R.id.btn_camera_switch).setOnClickListener(this);
         findViewById(R.id.btn_beauty).setOnClickListener(this);
+        findViewById(R.id.filter_btn).setOnClickListener(this);
         findViewById(R.id.record).setOnClickListener(this);
         videoWidth = 1280;
         viddoHeight = 720;
         init();
     }
+
     private void init() {
         if (videoWidth > viddoHeight) {
             mFilterView.setPreviewResolution(videoWidth, viddoHeight);
@@ -40,6 +43,7 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
         }
         mFilterView.startCamera();
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -53,6 +57,11 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btn_beauty:
                 isBeauty = !isBeauty;
                 mFilterView.onBeautyChange(isBeauty);
+                break;
+            case R.id.filter_btn:
+                if(mFilterView != null){
+                    mFilterView.setFilter(new BlendFilter(BeautyActivity.this,"filter/shape2.png"));
+                }
                 break;
             case R.id.record:
 
