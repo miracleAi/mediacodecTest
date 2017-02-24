@@ -130,6 +130,24 @@ public class BeautyRender {
             mFilter.onDrawFrame(id, gLCubeBuffer, gLTextureBuffer);
         }
     }
+    public void onDrawFrame(float[] mtx,int texId) {
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+        mBeautyFilter.setTextureTransformMatrix(mtx);
+        int id = texId;
+        if (mFilter == null) {
+            mBeautyFilter.onDrawFrame(texId, gLCubeBuffer, gLTextureBuffer);
+        } else {
+            float level = 0;
+            if(mIsBeauty){
+                level = 0.33f;
+            }else{
+                level = 0.0f;
+            }
+            id = mBeautyFilter.onDrawToTexture(texId,level);
+            mFilter.onDrawFrame(id, gLCubeBuffer, gLTextureBuffer);
+        }
+    }
     public void onBeautyChange(boolean isBeauty){
         mIsBeauty = isBeauty;
         if(mBeautyFilter != null){

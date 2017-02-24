@@ -32,6 +32,9 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import ffmpeg.egg.io.mediacodectest.filterrecord.filters.BeautyFilter;
+import ffmpeg.egg.io.mediacodectest.filterrecord.filters.BeautyRender;
+import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 import ffmpeg.egg.io.mediacodectest.recordold.CameraInputFilter;
 
 
@@ -155,7 +158,8 @@ public final class FilterRenderHandler implements Runnable {
 //********************************************************************************
     private FilterEGLBase mEgl;
     private FilterEGLBase.EglSurface mInputSurface;
-    private CameraInputFilter mFilter;
+    //private CameraInputFilter mFilter;
+    private BeautyRender mRender;
 
     @Override
     public final void run() {
@@ -187,8 +191,9 @@ public final class FilterRenderHandler implements Runnable {
                     GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
                     //mDrawer.setMatrix(mMatrix, 16);
                     //mDrawer.draw(mTexId, mMatrix);
-                    mFilter.setTextureTransformMatrix(mMatrix);
-                    mFilter.onDrawFrame(mTexId);
+                    //mFilter.setTextureTransformMatrix(mMatrix);
+                    //mFilter.onDrawFrame(mTexId);
+                    mRender.onDrawFrame(mMatrix,mTexId);
                     mInputSurface.swap();
                 }
             } else {
@@ -217,7 +222,7 @@ public final class FilterRenderHandler implements Runnable {
         mInputSurface = mEgl.createFromSurface(mSurface);
 
         mInputSurface.makeCurrent();
-        mFilter = new CameraInputFilter(mContext);
+        /*mFilter = new CameraInputFilter(mContext);
         mFilter.init();
         if(mWidth>mHeight){
             mFilter.onInputSizeChanged(mWidth,mHeight);
@@ -225,7 +230,11 @@ public final class FilterRenderHandler implements Runnable {
         }else{
             mFilter.onInputSizeChanged(mHeight,mWidth);
             mFilter.onDisplaySizeChanged(mHeight,mWidth);
-        }
+        }*/
+        mRender = new BeautyRender();
+        mRender.setVideoSize(mWidth,mHeight);
+        mRender.setSurfaceSize(mWidth,mHeight);
+        mRender.init(new BeautyFilter(mContext));
         mSurface = null;
         mSync.notifyAll();
     }
@@ -236,18 +245,26 @@ public final class FilterRenderHandler implements Runnable {
             mInputSurface.release();
             mInputSurface = null;
         }
-        if (mFilter != null) {
+        /*if (mFilter != null) {
             mFilter.destroy();
             mFilter = null;
-        }
+        }*/
         if (mEgl != null) {
             mEgl.release();
             mEgl = null;
         }
     }
     public void onBeautyChange(boolean isBeauty){
-        if(mFilter != null){
+        /*if(mFilter != null){
             mFilter.onBeautyChange(isBeauty);
+        }*/
+        if(mRender!=null){
+            mRender.onBeautyChange(isBeauty);
+        }
+    }
+    public void setFilter(GPUImageFilter filter){
+        if(mRender != null){
+            mRender.setFilter(filter,true);
         }
     }
 }

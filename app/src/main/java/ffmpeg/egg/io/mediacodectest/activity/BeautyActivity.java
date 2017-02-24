@@ -88,7 +88,7 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.filter_btn:
                 if (mFilterView != null) {
-                    mFilterView.setFilter(new BlendFilter(BeautyActivity.this, "filter/shape2.png"));
+                    mFilterView.setFilter(filterIndex);
                 }
                 break;
             case R.id.record:
@@ -145,8 +145,7 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
                 filterIndex = filterIndex - 1;
             }
             if(mFilterView != null){
-                mFilterView.setFilter(LensFilterFactory.getLensFilter(BeautyActivity.this,
-                        LensFilterFactory.volueOfFilter(filterIndex)));
+                mFilterView.setFilter(filterIndex);
             }
         }
         if (e1.getX() - e2.getX() > 0) {
@@ -157,8 +156,7 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
                 filterIndex = filterIndex + 1;
             }
             if(mFilterView != null){
-                mFilterView.setFilter(LensFilterFactory.getLensFilter(BeautyActivity.this,
-                        LensFilterFactory.volueOfFilter(filterIndex)));
+                mFilterView.setFilter(filterIndex);
             }
         }
         return false;

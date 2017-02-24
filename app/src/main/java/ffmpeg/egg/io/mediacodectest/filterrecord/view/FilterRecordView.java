@@ -22,6 +22,7 @@ import ffmpeg.egg.io.mediacodectest.filterrecord.encoder.FilterMediaEncoder;
 import ffmpeg.egg.io.mediacodectest.filterrecord.encoder.FilterVideoEncoder;
 import ffmpeg.egg.io.mediacodectest.filterrecord.filters.BeautyFilter;
 import ffmpeg.egg.io.mediacodectest.filterrecord.filters.BeautyRender;
+import ffmpeg.egg.io.mediacodectest.filterrecord.filters.LensFilterFactory;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 import ffmpeg.egg.io.mediacodectest.openglutils.OpenGlUtils;
 import ffmpeg.egg.io.mediacodectest.recordold.encoder.MediaVideoEncoder;
@@ -51,6 +52,7 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
 
     private FilterVideoEncoder mEncoder;
     private boolean mIsBeauty = false;
+    private int mFilterIndex = 0;
 
     public FilterRecordView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -272,16 +274,8 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
             mCamera.release();
             mCamera = null;
         }
+        mFilterIndex = 0;
     }
-
-    public void onBeautyChange(boolean isBeauty) {
-        mIsBeauty = isBeauty;
-        mRender.onBeautyChange(isBeauty);
-        if (mEncoder != null) {
-            mEncoder.onBeautyChange(isBeauty);
-        }
-    }
-
     private static final boolean DEBUG = false; // TODO set false on release
     private static final String TAG = "CameraGLView";
 
@@ -295,6 +289,10 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
                 mEncoder = encoder;
                 if (mEncoder != null) {
                     mEncoder.onBeautyChange(mIsBeauty);
+                    if(mFilterIndex != 0){
+                        mEncoder.setFilter(LensFilterFactory.getLensFilter(mContext,
+                                LensFilterFactory.volueOfFilter(mFilterIndex)));
+                    }
                 }
             }
         });
@@ -319,14 +317,28 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
 
         return new int[]{mPreviewWidth, mPreviewHeight};
     }
-    public void setFilter(final GPUImageFilter filter){
+    public void setFilter(final int index){
+        mFilterIndex = index;
+        if(mEncoder != null){
+            mEncoder.setFilter(LensFilterFactory.getLensFilter(mContext,
+                    LensFilterFactory.volueOfFilter(index)));
+        }
         queueEvent(new Runnable() {
             @Override
             public void run() {
                 if(mRender != null){
-                    mRender.setFilter(filter,false);
+                    mRender.setFilter(LensFilterFactory.getLensFilter(mContext,
+                            LensFilterFactory.volueOfFilter(index)),false);
                 }
             }
         });
     }
+    public void onBeautyChange(boolean isBeauty) {
+        mIsBeauty = isBeauty;
+        mRender.onBeautyChange(isBeauty);
+        if (mEncoder != null) {
+            mEncoder.onBeautyChange(isBeauty);
+        }
+    }
+
 }

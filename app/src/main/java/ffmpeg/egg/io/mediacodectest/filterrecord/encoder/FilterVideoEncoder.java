@@ -33,6 +33,7 @@ import android.view.Surface;
 
 import java.io.IOException;
 
+import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 import ffmpeg.egg.io.mediacodectest.recordold.glutils.RenderHandler;
 
 public class FilterVideoEncoder extends FilterMediaEncoder {
@@ -46,7 +47,7 @@ public class FilterVideoEncoder extends FilterMediaEncoder {
 
     private final int mWidth;
     private final int mHeight;
-    private RenderHandler mRenderHandler;
+    private FilterRenderHandler mRenderHandler;
     private Surface mSurface;
 
     public FilterVideoEncoder(Context context,final FilterMuxer muxer, final MediaEncoderListener listener, final int width, final int height) {
@@ -54,7 +55,7 @@ public class FilterVideoEncoder extends FilterMediaEncoder {
         if (DEBUG) Log.i(TAG, "MediaVideoEncoder: ");
         mWidth = width;
         mHeight = height;
-        mRenderHandler = RenderHandler.createHandler(mWidth,mHeight,context,TAG);
+        mRenderHandler = FilterRenderHandler.createHandler(mWidth,mHeight,context,TAG);
     }
 
     public boolean frameAvailableSoon(final float[] tex_matrix) {
@@ -231,5 +232,8 @@ public class FilterVideoEncoder extends FilterMediaEncoder {
 
     public void onBeautyChange(boolean isBeauty){
         mRenderHandler.onBeautyChange(isBeauty);
+    }
+    public void setFilter(GPUImageFilter filter){
+        mRenderHandler.setFilter(filter);
     }
 }
