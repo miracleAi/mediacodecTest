@@ -10,6 +10,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Pair;
 
 import java.io.IOException;
@@ -19,6 +20,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import ffmpeg.egg.io.mediacodectest.filterrecord.filters.BeautyFilter;
+import ffmpeg.egg.io.mediacodectest.filterrecord.filters.BeautyRender;
+import ffmpeg.egg.io.mediacodectest.openglutils.ImageTransformationMatrix;
 import ffmpeg.egg.io.mediacodectest.openglutils.OpenGlUtils;
 import ffmpeg.egg.io.mediacodectest.recordold.CameraInputFilter;
 import ffmpeg.egg.io.mediacodectest.recordold.encoder.MediaVideoEncoder;
@@ -41,7 +44,7 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
     private int mPreviewHeight;
     private float mInputAspectRatio;
     private float mOutputAspectRatio;
-    BeautyFilter filter;
+    private BeautyRender mRender;
     Context mContext;
     private float[] mProjectionMatrix = new float[16];
     private float[] mSurfaceMatrix = new float[16];
@@ -66,11 +69,10 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         GLES20.glDisable(GL10.GL_DITHER);
         GLES20.glClearColor(0, 0, 0, 0);
-        filter = new BeautyFilter(mContext);
-        filter.init();
-        filter.onInputSizeChanged(mPreviewWidth, mPreviewHeight);
-
-        mOESTextureId = OpenGlUtils.getExternalOESTextureID();
+        mRender = new BeautyRender();
+        mRender.setVideoSize(mPreviewWidth,mPreviewHeight);
+        mRender.init(new BeautyFilter(mContext));
+        mOESTextureId = mRender.getmGLTextureId();
         surfaceTexture = new SurfaceTexture(mOESTextureId);
         surfaceTexture.setOnFrameAvailableListener(new SurfaceTexture.OnFrameAvailableListener() {
             @Override
@@ -94,7 +96,7 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
         GLES20.glViewport(0, 0, width, height);
         mSurfaceWidth = width;
         mSurfaceHeight = height;
-        filter.onDisplaySizeChanged(width, height);
+        mRender.setSurfaceSize(mSurfaceWidth,mSurfaceHeight);
 
         mOutputAspectRatio = width > height ? (float) width / height : (float) height / width;
         float aspectRatio = mOutputAspectRatio / mInputAspectRatio;
@@ -113,8 +115,7 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
         surfaceTexture.updateTexImage();
         surfaceTexture.getTransformMatrix(mSurfaceMatrix);
         Matrix.multiplyMM(mTransformMatrix, 0, mSurfaceMatrix, 0, mProjectionMatrix, 0);
-        filter.setTextureTransformMatrix(mTransformMatrix);
-        filter.onDrawFrame(mOESTextureId);
+        mRender.onDrawFrame(mTransformMatrix);
         if (mEncoder != null) {
             mEncoder.frameAvailableSoon(null, mTransformMatrix);
         }
@@ -276,7 +277,7 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
 
     public void onBeautyChange(boolean isBeauty) {
         mIsBeauty = isBeauty;
-        filter.onBeautyChange(isBeauty);
+        mRender.onBeautyChange(isBeauty);
         if (mEncoder != null) {
             mEncoder.onBeautyChange(isBeauty);
         }
