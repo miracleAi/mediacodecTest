@@ -167,7 +167,7 @@ public class MediaAudioEncoder extends MediaEncoder {
 		            	audioRecord.release();
 		            }
 				} else {
-					Log.e(TAG, "failed to initialize AudioRecord");
+					Log.e(TAG, "failed to initialize FilterAudioRecorder");
 				}
     		} catch (final Exception e) {
     			Log.e(TAG, "AudioThread#run", e);

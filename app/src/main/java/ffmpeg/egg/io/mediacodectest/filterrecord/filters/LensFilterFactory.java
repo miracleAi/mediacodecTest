@@ -4,7 +4,6 @@ import android.content.Context;
 
 import ffmpeg.egg.io.mediacodectest.filters.BlendFilter;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
-import ffmpeg.egg.io.mediacodectest.openglutils.FilterType;
 
 /**
  * Created by zhulinping on 17/2/24.

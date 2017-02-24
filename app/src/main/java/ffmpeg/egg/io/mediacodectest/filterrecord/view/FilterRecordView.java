@@ -10,7 +10,6 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.Pair;
 
 import java.io.IOException;
@@ -19,15 +18,13 @@ import java.util.List;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import ffmpeg.egg.io.mediacodectest.filterrecord.encoder.FilterMediaEncoder;
+import ffmpeg.egg.io.mediacodectest.filterrecord.encoder.FilterVideoEncoder;
 import ffmpeg.egg.io.mediacodectest.filterrecord.filters.BeautyFilter;
 import ffmpeg.egg.io.mediacodectest.filterrecord.filters.BeautyRender;
-import ffmpeg.egg.io.mediacodectest.filters.BlendFilter;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
-import ffmpeg.egg.io.mediacodectest.openglutils.ImageTransformationMatrix;
 import ffmpeg.egg.io.mediacodectest.openglutils.OpenGlUtils;
-import ffmpeg.egg.io.mediacodectest.recordold.CameraInputFilter;
 import ffmpeg.egg.io.mediacodectest.recordold.encoder.MediaVideoEncoder;
-
 
 /**
  * Created by zhulinping on 16/12/21.
@@ -52,7 +49,7 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
     private float[] mSurfaceMatrix = new float[16];
     private float[] mTransformMatrix = new float[16];
 
-    private MediaVideoEncoder mEncoder;
+    private FilterVideoEncoder mEncoder;
     private boolean mIsBeauty = false;
 
     public FilterRecordView(Context context, AttributeSet attrs) {
@@ -288,7 +285,7 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
     private static final boolean DEBUG = false; // TODO set false on release
     private static final String TAG = "CameraGLView";
 
-    public void setVideoEncoder(final MediaVideoEncoder encoder) {
+    public void setVideoEncoder(final FilterVideoEncoder encoder) {
         queueEvent(new Runnable() {
             @Override
             public void run() {

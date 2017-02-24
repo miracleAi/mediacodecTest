@@ -5,7 +5,7 @@ package ffmpeg.egg.io.mediacodectest.recordold.glutils;
  *
  * Copyright (c) 2014-2015 saki t_saki@serenegiant.com
  *
- * File name: RenderHandler.java
+ * File name: FilterRenderHandler.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import ffmpeg.egg.io.mediacodectest.recordold.CameraInputFilter;
  */
 public final class RenderHandler implements Runnable {
 	private static final boolean DEBUG = false;	// TODO set false on release
-	private static final String TAG = "RenderHandler";
+	private static final String TAG = "FilterRenderHandler";
 
 	private final Object mSync = new Object();
     private EGLContext mShard_context;
@@ -159,7 +159,7 @@ public final class RenderHandler implements Runnable {
 
 	@Override
 	public final void run() {
-		if (DEBUG) Log.i(TAG, "RenderHandler thread started:");
+		if (DEBUG) Log.i(TAG, "FilterRenderHandler thread started:");
 		synchronized (mSync) {
 			mRequestSetEglContext = mRequestRelease = false;
 			mRequestDraw = 0;
@@ -206,7 +206,7 @@ public final class RenderHandler implements Runnable {
             internalRelease();
             mSync.notifyAll();
         }
-		if (DEBUG) Log.i(TAG, "RenderHandler thread finished:");
+		if (DEBUG) Log.i(TAG, "FilterRenderHandler thread finished:");
 	}
 
 	private final void internalPrepare() {

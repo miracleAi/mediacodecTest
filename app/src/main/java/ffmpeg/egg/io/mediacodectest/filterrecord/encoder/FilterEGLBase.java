@@ -1,4 +1,4 @@
-package ffmpeg.egg.io.mediacodectest.recordold.glutils;
+package ffmpeg.egg.io.mediacodectest.filterrecord.encoder;
 /*
  * AudioVideoRecordingSample
  * Sample project to cature audio and video from internal mic/camera and save as MPEG4 file.
@@ -36,7 +36,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-public class EGLBase {	// API >= 17
+public class FilterEGLBase {	// API >= 17
 	private static final boolean DEBUG = false;	// TODO set false on release
 	private static final String TAG = "FilterEGLBase";
 
@@ -48,11 +48,11 @@ public class EGLBase {	// API >= 17
 	private EGLContext mDefaultContext = EGL14.EGL_NO_CONTEXT;
 
 	public static class EglSurface {
-		private final EGLBase mEgl;
+		private final FilterEGLBase mEgl;
 		private EGLSurface mEglSurface = EGL14.EGL_NO_SURFACE;
 		private final int mWidth, mHeight;
 
-		EglSurface(final EGLBase egl, final Object surface) {
+		EglSurface(final FilterEGLBase egl, final Object surface) {
 			if (DEBUG) Log.v(TAG, "EglSurface:");
 			if (!(surface instanceof SurfaceView)
 				&& !(surface instanceof Surface)
@@ -66,7 +66,7 @@ public class EGLBase {	// API >= 17
 	        if (DEBUG) Log.v(TAG, String.format("EglSurface:size(%d,%d)", mWidth, mHeight));
 		}
 
-		EglSurface(final EGLBase egl, final int width, final int height) {
+		EglSurface(final FilterEGLBase egl, final int width, final int height) {
 			if (DEBUG) Log.v(TAG, "EglSurface:");
 			mEgl = egl;
 			mEglSurface = mEgl.createOffscreenSurface(width, height);
@@ -102,7 +102,7 @@ public class EGLBase {	// API >= 17
 		}
 	}
 
-	public EGLBase(final EGLContext shared_context, final boolean with_depth_buffer, final boolean isRecordable) {
+	public FilterEGLBase(final EGLContext shared_context, final boolean with_depth_buffer, final boolean isRecordable) {
 		if (DEBUG) Log.v(TAG, "FilterEGLBase:");
 		init(shared_context, with_depth_buffer, isRecordable);
 	}
