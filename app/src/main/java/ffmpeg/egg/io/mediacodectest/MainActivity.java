@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import ffmpeg.egg.io.mediacodectest.activity.BeautyActivity;
 import ffmpeg.egg.io.mediacodectest.activity.EditActivity;
 import ffmpeg.egg.io.mediacodectest.activity.RecordActivity;
 import ffmpeg.egg.io.mediacodectest.activity.ScreenRecordActivity;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         mBeautyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, RecordActivity.class);
+                Intent intent = new Intent(MainActivity.this, BeautyActivity.class);
                 startActivity(intent);
             }
         });
