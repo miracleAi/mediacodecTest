@@ -41,6 +41,7 @@ public class BeautyRender {
      * 图像宽高
      */
     protected int imageWidth, imageHeight;
+    boolean mIsBeauty = false;
 
 
     public BeautyRender() {
@@ -55,16 +56,14 @@ public class BeautyRender {
         gLTextureBuffer.put(TextureRotationUtil.getRotation(Rotation.NORMAL, false, true)).position(0);
     }
 
-    public void setVideoSize(int width, int height) {
+    public void setVideoSize(int width,int height){
         imageWidth = width;
         imageHeight = height;
     }
-
-    public void setSurfaceSize(int width, int height) {
+    public void setSurfaceSize(int width,int height){
         surfaceWidth = width;
         surfaceHeight = height;
     }
-
     public void init(BeautyFilter filter) {
         if (mBeautyFilter == null)
             mBeautyFilter = filter;
@@ -87,25 +86,24 @@ public class BeautyRender {
             mFilter = null;
         }
         mFilter = filter;
-        if (mFilter != null) {
-            Log.d("mytest", "filter is not null !!!!!!!");
+        if(mFilter != null ){
+            Log.d("mytest","filter is not null !!!!!!!");
             mFilter.init();
         }
         onFilterChanged(isTransCode);
     }
-
     private void onFilterChanged(boolean isTransCode) {
         if (mFilter != null) {
-            if (isTransCode) {
+            if(isTransCode){
                 mFilter.onDisplaySizeChanged(imageWidth, imageHeight);
-            } else {
+            }else{
                 mFilter.onDisplaySizeChanged(surfaceWidth, surfaceHeight);
             }
             mFilter.onInputSizeChanged(imageWidth, imageHeight);
         }
-        if (isTransCode) {
+        if(isTransCode){
             mBeautyFilter.onDisplaySizeChanged(imageWidth, imageHeight);
-        } else {
+        }else{
             mBeautyFilter.onDisplaySizeChanged(surfaceWidth, surfaceHeight);
         }
         if (mFilter != null)
@@ -122,16 +120,22 @@ public class BeautyRender {
         if (mFilter == null) {
             mBeautyFilter.onDrawFrame(textureId, gLCubeBuffer, gLTextureBuffer);
         } else {
-            id = mBeautyFilter.onDrawToTexture(textureId);
+            float level = 0;
+            if(mIsBeauty){
+                level = 0.33f;
+            }else{
+                level = 0.0f;
+            }
+            id = mBeautyFilter.onDrawToTexture(textureId,level);
             mFilter.onDrawFrame(id, gLCubeBuffer, gLTextureBuffer);
         }
     }
-
-    public void onBeautyChange(boolean isBeauty) {
-        if (mBeautyFilter != null) {
-            if (isBeauty) {
-                mBeautyFilter.setBeautyLevel(5);
-            } else {
+    public void onBeautyChange(boolean isBeauty){
+        mIsBeauty = isBeauty;
+        if(mBeautyFilter != null){
+            if(isBeauty){
+            mBeautyFilter.setBeautyLevel(5);
+            }else{
                 mBeautyFilter.setBeautyLevel(0);
             }
         }

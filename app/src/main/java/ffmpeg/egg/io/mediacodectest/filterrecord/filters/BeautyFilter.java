@@ -3,6 +3,7 @@ package ffmpeg.egg.io.mediacodectest.filterrecord.filters;
 import android.content.Context;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import java.nio.FloatBuffer;
 
@@ -100,7 +101,7 @@ public class BeautyFilter extends GPUImageFilter {
         return OpenGlUtils.ON_DRAWN;
     }
 
-    public int onDrawToTexture(final int textureId) {
+    public int onDrawToTexture(final int textureId,float level) {
         if (mFrameBuffers == null)
             return OpenGlUtils.NO_TEXTURE;
         runPendingOnDrawTasks();
@@ -117,7 +118,7 @@ public class BeautyFilter extends GPUImageFilter {
         GLES20.glVertexAttribPointer(mGLAttribTextureCoordinate, 2, GLES20.GL_FLOAT, false, 0, mGLTextureBuffer);
         GLES20.glEnableVertexAttribArray(mGLAttribTextureCoordinate);
         GLES20.glUniformMatrix4fv(mTextureTransformMatrixLocation, 1, false, mTextureTransformMatrix, 0);
-
+        GLES20.glUniform1f(mParamsLocation, level);
         if (textureId != OpenGlUtils.NO_TEXTURE) {
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
             GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureId);
