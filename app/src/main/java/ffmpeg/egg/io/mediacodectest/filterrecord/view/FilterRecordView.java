@@ -10,6 +10,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Pair;
 
 import java.io.IOException;
@@ -289,10 +290,6 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
                 mEncoder = encoder;
                 if (mEncoder != null) {
                     mEncoder.onBeautyChange(mIsBeauty);
-                    if(mFilterIndex != 0){
-                        mEncoder.setFilter(LensFilterFactory.getLensFilter(mContext,
-                                LensFilterFactory.volueOfFilter(mFilterIndex)));
-                    }
                 }
             }
         });
@@ -319,10 +316,6 @@ public class FilterRecordView extends GLSurfaceView implements GLSurfaceView.Ren
     }
     public void setFilter(final int index){
         mFilterIndex = index;
-        if(mEncoder != null){
-            mEncoder.setFilter(LensFilterFactory.getLensFilter(mContext,
-                    LensFilterFactory.volueOfFilter(index)));
-        }
         queueEvent(new Runnable() {
             @Override
             public void run() {

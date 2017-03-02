@@ -6,6 +6,8 @@ import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.media.projection.MediaProjection;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Surface;
 
@@ -32,6 +34,7 @@ public class VideoRecorder {
     private VirtualDisplay mVirtualDisplay;
     private Muxer mMuxer;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public VideoRecorder(int width, int height, int bitrate, int mDpi, MediaProjection mediaProjection, Muxer muxer){
         mMuxer = muxer;
         //mMuxer.setmIsSilence(true);
@@ -56,6 +59,7 @@ public class VideoRecorder {
                 mSurface, null, null);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void videoEncoder(){
         int index = mEncoder.dequeueOutputBuffer(mBufferInfo, TIMEOUT_US);
         if (index == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
@@ -77,6 +81,7 @@ public class VideoRecorder {
             mEncoder.releaseOutputBuffer(index, false);
         }
     }
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void encodeToVideoTrack(int index) {
         ByteBuffer encodedData = mEncoder.getOutputBuffer(index);
 
@@ -103,6 +108,7 @@ public class VideoRecorder {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void release(){
 
         if (mEncoder != null) {

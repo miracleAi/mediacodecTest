@@ -16,6 +16,7 @@
 
 package ffmpeg.egg.io.mediacodectest.screencast;
 
+import android.annotation.TargetApi;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
 import android.media.MediaCodec;
@@ -23,6 +24,8 @@ import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
 import android.media.projection.MediaProjection;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Surface;
 
@@ -79,6 +82,8 @@ public class ScreenRecorder extends Thread {
         mQuit.set(true);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void run() {
         try {
@@ -100,6 +105,7 @@ public class ScreenRecorder extends Thread {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void recordVirtualDisplay() {
         while (!mQuit.get()) {
             int index = mEncoder.dequeueOutputBuffer(mBufferInfo, TIMEOUT_US);
@@ -126,6 +132,7 @@ public class ScreenRecorder extends Thread {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void encodeToVideoTrack(int index) {
         ByteBuffer encodedData = mEncoder.getOutputBuffer(index);
 
@@ -183,6 +190,8 @@ public class ScreenRecorder extends Thread {
         mEncoder.start();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void release() {
         if (mEncoder != null) {
             mEncoder.stop();

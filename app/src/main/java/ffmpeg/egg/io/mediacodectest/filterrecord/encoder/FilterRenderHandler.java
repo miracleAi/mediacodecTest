@@ -58,9 +58,11 @@ public final class FilterRenderHandler implements Runnable {
     private static Context mContext;
     private static int mWidth;
     private static int mHeight;
+    private static GPUImageFilter mFilter;
 
-    public static final FilterRenderHandler createHandler(int width, int height, Context context, final String name) {
+    public static final FilterRenderHandler createHandler(GPUImageFilter filter,int width, int height, Context context, final String name) {
         mContext = context;
+        mFilter = filter;
         mWidth = width;
         mHeight = height;
         if (DEBUG) Log.v(TAG, "createHandler:");
@@ -235,6 +237,9 @@ public final class FilterRenderHandler implements Runnable {
         mRender.setVideoSize(mWidth,mHeight);
         mRender.setSurfaceSize(mWidth,mHeight);
         mRender.init(new BeautyFilter(mContext));
+        if(mFilter != null){
+            mRender.setFilter(mFilter,true);
+        }
         mSurface = null;
         mSync.notifyAll();
     }
@@ -260,11 +265,6 @@ public final class FilterRenderHandler implements Runnable {
         }*/
         if(mRender!=null){
             mRender.onBeautyChange(isBeauty);
-        }
-    }
-    public void setFilter(GPUImageFilter filter){
-        if(mRender != null){
-            mRender.setFilter(filter,true);
         }
     }
 }

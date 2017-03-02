@@ -50,12 +50,12 @@ public class FilterVideoEncoder extends FilterMediaEncoder {
     private FilterRenderHandler mRenderHandler;
     private Surface mSurface;
 
-    public FilterVideoEncoder(Context context,final FilterMuxer muxer, final MediaEncoderListener listener, final int width, final int height) {
+    public FilterVideoEncoder(Context context,final FilterMuxer muxer, final MediaEncoderListener listener,GPUImageFilter filter,final int width, final int height) {
         super(muxer, listener);
         if (DEBUG) Log.i(TAG, "MediaVideoEncoder: ");
         mWidth = width;
         mHeight = height;
-        mRenderHandler = FilterRenderHandler.createHandler(mWidth,mHeight,context,TAG);
+        mRenderHandler = FilterRenderHandler.createHandler(filter,mWidth,mHeight,context,TAG);
     }
 
     public boolean frameAvailableSoon(final float[] tex_matrix) {
@@ -122,6 +122,7 @@ public class FilterVideoEncoder extends FilterMediaEncoder {
 
     @Override
     protected void release() {
+        Log.d("mytest","video release");
         if (DEBUG) Log.i(TAG, "release:");
         if (mSurface != null) {
             mSurface.release();
@@ -232,8 +233,5 @@ public class FilterVideoEncoder extends FilterMediaEncoder {
 
     public void onBeautyChange(boolean isBeauty){
         mRenderHandler.onBeautyChange(isBeauty);
-    }
-    public void setFilter(GPUImageFilter filter){
-        mRenderHandler.setFilter(filter);
     }
 }

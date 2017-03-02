@@ -43,6 +43,7 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
     private int filterIndex = 0;
     String savePath = "";
     private FilterMuxer mMuxer;
+    boolean isRecording = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +94,10 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.record:
                 if (mMuxer == null) {
+                    isRecording = true;
                     startRecording();
                 } else {
+                    isRecording = false;
                     stopRecording();
                 }
                 break;
@@ -138,6 +141,9 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        if(isRecording){
+            return false;
+        }
         if (e2.getX() - e1.getX() > 0) {
             if (filterIndex == 0) {
                 filterIndex = 13;
@@ -174,7 +180,8 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
             mMuxer = new FilterMuxer(savePath);    // if you record audio only, ".m4a" is also OK.
             if (true) {
                 // for video capturing
-                new FilterVideoEncoder(BeautyActivity.this, mMuxer, mMediaEncoderListener, 480, 854);
+                new FilterVideoEncoder(BeautyActivity.this, mMuxer, mMediaEncoderListener,
+                        LensFilterFactory.getLensFilter(BeautyActivity.this,LensFilterFactory.volueOfFilter(filterIndex)),480, 854);
             }
             if (true) {
                 // for audio capturing
