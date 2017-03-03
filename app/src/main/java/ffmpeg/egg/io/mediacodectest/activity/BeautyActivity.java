@@ -176,7 +176,9 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
     private void startRecording() {
         if (DEBUG) Log.v(TAG, "startRecording:");
         try {
-            savePath = getCaptureFile(Environment.DIRECTORY_MOVIES, ".mp4").toString();
+           // savePath = getCaptureFile(Environment.DIRECTORY_MOVIES, ".mp4").toString();
+            savePath = Environment.getExternalStorageDirectory().toString()
+                    + "/dcim/camera/"+System.currentTimeMillis()+".mp4";
             mMuxer = new FilterMuxer(savePath);    // if you record audio only, ".m4a" is also OK.
             if (true) {
                 // for video capturing
@@ -224,6 +226,8 @@ public class BeautyActivity extends AppCompatActivity implements View.OnClickLis
                 mFilterView.setVideoEncoder(null);
                 mFilterView.stopCamera();
                 if (savePath != null && !"".equals(savePath)) {
+                    String mfilePath = Environment.getExternalStorageDirectory().toString()
+                            + "/dcim/camera/"+"20170302_115444.mp4";
                     Intent intent = new Intent(BeautyActivity.this, EditActivity.class);
                     intent.putExtra(MainActivity.PATH,savePath);
                     startActivity(intent);

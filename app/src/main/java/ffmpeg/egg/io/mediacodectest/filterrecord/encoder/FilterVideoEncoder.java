@@ -42,7 +42,7 @@ public class FilterVideoEncoder extends FilterMediaEncoder {
 
     private static final String MIME_TYPE = "video/avc";
     // parameters for recording
-    private static final int FRAME_RATE = 30;
+    private static final int FRAME_RATE = 25;
     private static final float BPP = 0.25f;
 
     private final int mWidth;
@@ -95,7 +95,7 @@ public class FilterVideoEncoder extends FilterMediaEncoder {
 
         final MediaFormat format = MediaFormat.createVideoFormat(MIME_TYPE, mWidth, mHeight);
         format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);	// API >= 18
-        format.setInteger(MediaFormat.KEY_BIT_RATE, 1500000);
+        format.setInteger(MediaFormat.KEY_BIT_RATE, 2000000);
         format.setInteger(MediaFormat.KEY_FRAME_RATE, FRAME_RATE);
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 10);
         if (DEBUG) Log.i(TAG, "format: " + format);

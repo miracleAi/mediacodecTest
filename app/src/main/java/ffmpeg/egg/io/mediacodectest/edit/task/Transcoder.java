@@ -163,9 +163,9 @@ public class Transcoder {
         public void done() {
             mContext.sendBroadcast(new Intent(EditActivity.ENCODE_DONE));
             mAudioEncoderDone = true;
-            mAudioEncoder.release();
-            mAudioDecoder.release();
             mAudioExtractor.release();
+            mAudioDecoder.release();
+            mAudioEncoder.release();
             if (mVideoEncoderDone) {
                 mMuxer.stopMuxer();
             }
@@ -178,9 +178,9 @@ public class Transcoder {
         public void done() {
             mContext.sendBroadcast(new Intent(EditActivity.ENCODE_DONE));
             mVideoEncoderDone = true;
-            mVideoEncoder.release();
-            mVideoDecoder.release();
             mVideoExtractor.release();
+            mVideoDecoder.release();
+            mVideoEncoder.release();
             if (mAudioEncoderDone) {
                 mMuxer.stopMuxer();
             }

@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mfilePath = Environment.getExternalStorageDirectory().toString()
-                + "/dcim/camera/"+"VID20170222173039.mp4";
+                + "/dcim/camera/"+"1488432833251.mp4";
         initView();
     }
 

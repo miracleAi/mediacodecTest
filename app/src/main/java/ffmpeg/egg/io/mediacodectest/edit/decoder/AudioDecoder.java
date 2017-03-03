@@ -29,6 +29,9 @@ public class AudioDecoder extends BaseDecoder{
 
     @Override
     public void getFrameFromDecoder() {
+        if(mDecoder == null){
+            return;
+        }
         int outputIndex = mDecoder.dequeueOutputBuffer(mBufferInfo, 10000L);
         if (outputIndex < 0) {
             return;

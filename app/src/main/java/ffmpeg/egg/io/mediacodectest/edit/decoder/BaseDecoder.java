@@ -42,6 +42,7 @@ public abstract class BaseDecoder extends Stage {
         if (mDecoder != null) {
             mDecoder.stop();
             mDecoder.release();
+            mDecoder = null;
         }
     }
 }

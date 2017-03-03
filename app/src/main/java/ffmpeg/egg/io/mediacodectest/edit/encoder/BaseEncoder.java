@@ -37,6 +37,9 @@ public abstract class BaseEncoder extends Stage {
             Log.d("ENCODER", "Mixer is not started returning");
             return;
         }
+        if(mEncoder == null){
+            return;
+        }
         MediaCodec.BufferInfo mBufferInfo = new MediaCodec.BufferInfo();
         ByteBuffer[] outputBuffers = mEncoder.getOutputBuffers();
         int encoderStatus = mEncoder.dequeueOutputBuffer(mBufferInfo, 10000L);
@@ -81,6 +84,7 @@ public abstract class BaseEncoder extends Stage {
         if(mEncoder != null){
             mEncoder.stop();
             mEncoder.release();
+            mEncoder = null;
         }
     }
 }
