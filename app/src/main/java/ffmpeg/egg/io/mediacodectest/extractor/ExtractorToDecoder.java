@@ -61,7 +61,7 @@ public class ExtractorToDecoder {
                 mAudioExtractor.advance();
             }
         }else{
-            Log.d("mytest","aideo input -1");
+            Log.d("mytest","audio input -1");
 
         }
     }

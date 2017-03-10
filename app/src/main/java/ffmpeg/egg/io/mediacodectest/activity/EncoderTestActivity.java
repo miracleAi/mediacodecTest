@@ -18,6 +18,12 @@ import ffmpeg.egg.io.mediacodectest.encoder.Encoder;
 import ffmpeg.egg.io.mediacodectest.extractor.ExtractorToDecoder;
 import ffmpeg.egg.io.mediacodectest.utils.DoneCallback;
 
+/**
+ * encoder 不能成功
+ * colorformat不匹配
+ * encoder配置的colorformat只能保存surface传来的数据
+ * */
+
 public class EncoderTestActivity extends AppCompatActivity {
     private static final int ENCODER = 2;
     private Button mEncoderBtn;

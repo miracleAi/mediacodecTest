@@ -26,6 +26,9 @@ public class DecoderToOpengl {
     private OutputSurface mOutputSurface;
     private InputSurface mInputSurface;
     Surface surface;
+    int audioIndex = -1;
+    MediaCodec.BufferInfo mAudioBufferInfo = new MediaCodec.BufferInfo();
+
 
     public DecoderToOpengl(ExtractorToDecoder extractor) {
         mExtractor = extractor;
@@ -59,37 +62,53 @@ public class DecoderToOpengl {
     }
 
     public void audioDecoder() {
-        MediaCodec.BufferInfo mBufferInfo = new MediaCodec.BufferInfo();
-        int outputIndex = mAudioDecoder.dequeueOutputBuffer(mBufferInfo, 10000L);
-        ByteBuffer[] outputBuffers = mAudioDecoder.getOutputBuffers();
-        ByteBuffer[] inputBuffers = mAudioEncoder.getInputBuffers();
+        if(audioIndex == -1){
+            getAudio();
+        }
+        putAudio();
+    }
+    public void getAudio(){
+        if(mAudioEncoder == null){
+            return;
+        }
+        int outputIndex = mAudioDecoder.dequeueOutputBuffer(mAudioBufferInfo, 10000L);
         if (outputIndex < 0) {
             return;
         }
-        if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
+        if ((mAudioBufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
             mAudioDecoder.releaseOutputBuffer(outputIndex, false);
             return;
         }
+        audioIndex = outputIndex;
+    }
+    public void putAudio(){
+        if(audioIndex == -1){
+            return;
+        }
+        ByteBuffer[] outputBuffers = mAudioDecoder.getOutputBuffers();
+        ByteBuffer[] inputBuffers = mAudioEncoder.getInputBuffers();
         int index = mAudioEncoder.dequeueInputBuffer(TIMEOUT_USEC);
         if (index == -1) {
             Log.d("AUDIODECODER", "no audio encoder input buffer");
             return;
         }
-        if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
-            mAudioEncoder.signalEndOfInputStream();
-        }
         ByteBuffer localByteBuffer = inputBuffers[index];
-        int size = mBufferInfo.size;
+        int size = mAudioBufferInfo.size;
         if (size >= 0) {
-            ByteBuffer buffer = outputBuffers[outputIndex];
+            ByteBuffer buffer = outputBuffers[audioIndex];
+            buffer.limit(mAudioBufferInfo.offset + mAudioBufferInfo.size);
             localByteBuffer.position(0);
             localByteBuffer.put(buffer);
-            mAudioEncoder.queueInputBuffer(index, 0, size, mBufferInfo.presentationTimeUs, mBufferInfo.flags);
+            mAudioEncoder.queueInputBuffer(index, 0, size, mAudioBufferInfo.presentationTimeUs, mAudioBufferInfo.flags);
         }
-        mAudioDecoder.releaseOutputBuffer(outputIndex, false);
+        mAudioDecoder.releaseOutputBuffer(audioIndex, false);
+        audioIndex = -1;
     }
 
     public void videoDecoder() {
+        if(mVideoEncoder == null){
+            return;
+        }
         MediaCodec.BufferInfo mBufferInfo = new MediaCodec.BufferInfo();
         int decoderStatus = mVideoDecoder.dequeueOutputBuffer(mBufferInfo, TIMEOUT_USEC);
         if (decoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {

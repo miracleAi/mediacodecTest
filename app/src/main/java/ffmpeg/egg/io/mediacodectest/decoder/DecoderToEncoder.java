@@ -55,10 +55,12 @@ public class DecoderToEncoder {
         ByteBuffer[] outputBuffers = mAudioDecoder.getOutputBuffers();
         ByteBuffer[] inputBuffers = mAudioEncoder.getInputBuffers();
         if (outputIndex < 0) {
+            Log.d("mytest", "no output from decoder available");
             return;
         }
         if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
             mAudioDecoder.releaseOutputBuffer(outputIndex, false);
+            Log.d("mytest", "biffer config");
             return;
         }
         int index = mAudioEncoder.dequeueInputBuffer(TIMEOUT_USEC);
@@ -70,6 +72,7 @@ public class DecoderToEncoder {
         int size = mBufferInfo.size;
         if (size >= 0) {
             ByteBuffer buffer = outputBuffers[outputIndex];
+            buffer.limit(mBufferInfo.offset + mBufferInfo.size);
             localByteBuffer.position(0);
             localByteBuffer.put(buffer);
             mAudioEncoder.queueInputBuffer(index, 0, size, mBufferInfo.presentationTimeUs, mBufferInfo.flags);
@@ -113,14 +116,14 @@ public class DecoderToEncoder {
     }
 
     public void releaseAudio(){
+        mExtractor.releaseAudioExtractor();
         mAudioDecoder.stop();
         mAudioDecoder.release();
-        mExtractor.releaseAudioExtractor();
     }
     public void releaseVideo(){
+        mExtractor.releaseVideoExtractor();
         mVideoDecoder.stop();
         mVideoDecoder.release();
-        mExtractor.releaseVideoExtractor();
     }
     public void setmAudioEncoder(MediaCodec audioEncoder) {
         mAudioEncoder = audioEncoder;
