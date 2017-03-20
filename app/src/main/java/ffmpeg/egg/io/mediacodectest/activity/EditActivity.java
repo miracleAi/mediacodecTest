@@ -103,8 +103,8 @@ public class EditActivity extends AppCompatActivity {
                 if (mThread != null) {
                     Log.d("mytest", "test silence" + isSilence);
                     mThread.setSilence(isSilence);
-                    mThread.setFilter(FilterFactory.getFilter(EditActivity.this,
-                            FilterFactory.volueOfFilter(index%9)));
+                    /*mThread.setFilter(FilterFactory.getFilter(EditActivity.this,
+                            FilterFactory.volueOfFilter(index%9)));*/
                 }
             }
         });

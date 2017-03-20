@@ -14,6 +14,7 @@ import ffmpeg.egg.io.mediacodectest.edit.extractor.VideoExtractor;
 import ffmpeg.egg.io.mediacodectest.edit.surface.InputSurface;
 import ffmpeg.egg.io.mediacodectest.edit.utils.StageDoneCallback;
 import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
+import ffmpeg.egg.io.mediacodectest.filters.BlendFilter;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 
 /**
@@ -32,14 +33,17 @@ public class Render {
     private boolean mAbort = false;
     private boolean isChangeFilter = false;
     private GPUImageFilter mFilter;
+    TranscodingResources mResources;
     private boolean mAudioExtractorDone = false;
     private boolean mVideoExtractorDone = false;
     private boolean mAudioDecodeerDone = false;
     private boolean mVideoDecoderDone  = false;
+    int filterIndex = -1;
 
     public Render(InputSurface surface, String path, TranscodingResources resources) {
         mExecutor = Executors.newCachedThreadPool();
         surface.makeCurrent();
+        mResources = resources;
         mAudioExtractor = new AudioExtractor(path,new AudioExtractorDone());
         mVideoExtractor = new VideoExtractor(path,new VideoExtractorDone());
         mAudioDecoder = new AudioTrackDecoder(mAudioExtractor.getFormat(),new AudioDecoderDone());
@@ -102,7 +106,7 @@ public class Render {
             mExecutor.execute(mVideoThread);
         }
         while (true) {
-            updateFilters();
+            //updateFilters();
             if (!mAbort || !isConplete()){
                 if ((mVideoDecoder != null) && (!mVideoDecoderDone)) {
                     mVideoDecoder.videoDecoder();
@@ -148,10 +152,13 @@ public class Render {
     }
 
     private void updateFilters() {
-        if (isChangeFilter) {
+        filterIndex = (filterIndex+1)%6 + 1;
+        BlendFilter filter = new BlendFilter(mResources.getmContext(),"filter/zshape"+filterIndex+".png");
+        mVideoDecoder.setFilter(filter);
+        /*if (isChangeFilter) {
             mVideoDecoder.setFilter(mFilter);
             isChangeFilter = false;
-        }
+        }*/
     }
 
     public void setFilter(GPUImageFilter filter) {

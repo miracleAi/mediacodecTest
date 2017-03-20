@@ -8,6 +8,7 @@ import ffmpeg.egg.io.mediacodectest.edit.surface.InputSurface;
 import ffmpeg.egg.io.mediacodectest.edit.surface.OutputSurface;
 import ffmpeg.egg.io.mediacodectest.edit.utils.StageDoneCallback;
 import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
+import ffmpeg.egg.io.mediacodectest.filters.BlendFilter;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 
 /**
@@ -19,9 +20,13 @@ public class VideoDecoder extends BaseDecoder {
     private MediaCodec mEncoder;
     protected InputSurface mInputSurface;
     MediaCodec.BufferInfo mBufferInfo;
+    TranscodingResources mResources;
+    int filterIndex = -1;
 
     public VideoDecoder(MediaFormat paramMediaFormat, TranscodingResources resources, StageDoneCallback callback) {
         this(paramMediaFormat, new OutputSurface(resources), callback);
+        mResources = resources;
+
     }
 
     public VideoDecoder(MediaFormat paramMediaFormat, OutputSurface paramSurface, StageDoneCallback callback) {
@@ -77,6 +82,9 @@ public class VideoDecoder extends BaseDecoder {
             Log.d(TAG, "Error getting encoder input surface");
             return;
         }
+        filterIndex = (filterIndex+1)%6 + 1;
+        BlendFilter filter = new BlendFilter(mResources.getmContext(),"filter/zshape"+filterIndex+".png");
+        mOutputSurface.setFilter(filter,true);
         mOutputSurface.drawImage();
         mInputSurface.setPresentationTime(mBufferInfo.presentationTimeUs * 1000L);
         mInputSurface.swapBuffers();

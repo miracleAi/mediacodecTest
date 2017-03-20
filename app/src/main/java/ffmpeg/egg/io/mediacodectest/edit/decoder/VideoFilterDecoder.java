@@ -10,6 +10,7 @@ import ffmpeg.egg.io.mediacodectest.edit.surface.InputSurface;
 import ffmpeg.egg.io.mediacodectest.edit.surface.OutputSurface;
 import ffmpeg.egg.io.mediacodectest.edit.utils.StageDoneCallback;
 import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
+import ffmpeg.egg.io.mediacodectest.filters.BlendFilter;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 
 /**
@@ -26,8 +27,14 @@ public class VideoFilterDecoder {
     private long mPrevPresentUsec = 0L;
     private int drawFramIndex = -1;
     private MediaCodec.BufferInfo mBufferInfo = new MediaCodec.BufferInfo();
+    private long firstTime = -1;
+    private long gifStartTime = -1;
+    private long gifLastTime = -1;
+    private int filterIndex = -1;
+    private TranscodingResources mRecouces;
     public VideoFilterDecoder(TranscodingResources resources, MediaFormat videoFormat, StageDoneCallback callback) {
         mCallback = callback;
+        mRecouces = resources;
         mOutputSurface = new OutputSurface(resources);
         String mimeVideo = videoFormat.getString(MediaFormat.KEY_MIME);
         try {
@@ -105,6 +112,28 @@ public class VideoFilterDecoder {
     public void outputFrame() {
         if(!shouldNew()){
             return ;
+        }
+        if(firstTime < 0){
+            firstTime = mBufferInfo.presentationTimeUs;
+        }
+        if((mBufferInfo.presentationTimeUs - firstTime)>=3*1000000){
+            if(gifStartTime < 0){
+                gifStartTime = mBufferInfo.presentationTimeUs;
+            }
+            if(gifLastTime < 0){
+                gifLastTime = mBufferInfo.presentationTimeUs;
+                filterIndex = (filterIndex+1)%6 + 1;
+                BlendFilter filter = new BlendFilter(mRecouces.getmContext(),"filter/zshape"+filterIndex+".png");
+                setFilter(filter);
+            }
+            if(mBufferInfo.presentationTimeUs - gifStartTime <= 3*1000000
+                    && mBufferInfo.presentationTimeUs - gifLastTime >= 3*1000000/6){
+                filterIndex = (filterIndex+1)%6 + 1;
+                BlendFilter filter = new BlendFilter(mRecouces.getmContext(),"filter/zshape"+filterIndex+".png");
+                setFilter(filter);
+            }else{
+                setFilter(null);
+            }
         }
         mOutputSurface.drawImage();
         mInputSurface.swapBuffers();

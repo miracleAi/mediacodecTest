@@ -53,4 +53,8 @@ public class TranscodingResources {
     public int getVideoHeight(){
         return videoHeight;
     }
+
+    public Context getmContext() {
+        return mContext;
+    }
 }
