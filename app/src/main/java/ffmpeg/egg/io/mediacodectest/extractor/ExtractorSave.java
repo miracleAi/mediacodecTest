@@ -1,7 +1,6 @@
 package ffmpeg.egg.io.mediacodectest.extractor;
 
 import android.media.MediaCodec;
-import android.media.MediaCodecInfo;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
@@ -11,13 +10,14 @@ import android.util.Log;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import ffmpeg.egg.io.mediacodectest.activity.ExtractorActivity;
 import ffmpeg.egg.io.mediacodectest.utils.DoneCallback;
 
 /**
- * Created by zhulinping on 17/2/6.
+ * Created by zhulinping on 17/3/20.
  */
 
-public class Extractor {
+public class ExtractorSave {
     String mOutputVideoPath = "";
     String mPath = "";
     MediaMuxer mMediaMuxer = null;
@@ -28,15 +28,23 @@ public class Extractor {
     boolean isAudioExtractorDone = false;
     boolean isVideoExtractorDone = false;
     DoneCallback mCallback;
+    private int mType = -1;
 
-    public Extractor(String filePath, DoneCallback callback) {
+    public ExtractorSave(String filePath, int type, DoneCallback callback) {
         mCallback = callback;
         mPath = filePath;
+        mType = type;
         mOutputVideoPath = Environment.getExternalStorageDirectory().toString()
                 + "/dcim/camera/" + System.currentTimeMillis() + ".mp4";
+        try {
+            mMediaMuxer = new MediaMuxer(mOutputVideoPath,
+                    MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void addTrack() {
+    public void addAllTrack() {
         try {
             mMediaMuxer = new MediaMuxer(mOutputVideoPath,
                     MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
@@ -59,11 +67,47 @@ public class Extractor {
                     break;
                 }
             }
-            Log.d("mytest","audio"+audioTrackIndex+"video"+videoTrackIndex);
+            Log.d("mytest", "audio" + audioTrackIndex + "video" + videoTrackIndex);
             // 添加完所有轨道后start
             mMediaMuxer.start();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void addVideoTrack() {
+        try {
+            mVideoExtractor.setDataSource(mPath);
+            for (int i = 0; i < mVideoExtractor.getTrackCount(); i++) {
+                MediaFormat format = mVideoExtractor.getTrackFormat(i);
+                if (format.getString(MediaFormat.KEY_MIME).startsWith("video/")) {
+                    mVideoExtractor.selectTrack(i);
+                    videoTrackIndex = mMediaMuxer.addTrack(format);
+                    break;
+                }
+            }
+            mMediaMuxer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    public void addAudioTrack() {
+        try {
+            mAudioExtractor.setDataSource(mPath);
+            for (int i = 0; i < mAudioExtractor.getTrackCount(); i++) {
+                MediaFormat format = mAudioExtractor.getTrackFormat(i);
+                if (format.getString(MediaFormat.KEY_MIME).startsWith("audio/")) {
+                    mAudioExtractor.selectTrack(i);
+                    audioTrackIndex = mMediaMuxer.addTrack(format);
+                    break;
+                }
+            }
+            mMediaMuxer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+
         }
     }
 
@@ -91,9 +135,7 @@ public class Extractor {
             mAudioExtractor.release();
             isAudioExtractorDone = true;
             mCallback.audioDone();
-            if (isVideoExtractorDone) {
-                release();
-            }
+            release();
         }
     }
 
@@ -120,15 +162,33 @@ public class Extractor {
             mVideoExtractor.release();
             isVideoExtractorDone = true;
             mCallback.videoDone();
-            if (isAudioExtractorDone) {
-                release();
-            }
+            release();
         }
     }
 
+
     public void release() {
         // 释放MediaMuxer
-        mMediaMuxer.stop();
-        mMediaMuxer.release();
+        switch (mType) {
+            case ExtractorActivity.ALL_TYPE:
+                if (isAudioExtractorDone && isVideoExtractorDone) {
+                    mMediaMuxer.stop();
+                    mMediaMuxer.release();
+                }
+                break;
+            case ExtractorActivity.AUDIO_TYPE:
+                if (isAudioExtractorDone) {
+                    mMediaMuxer.stop();
+                    mMediaMuxer.release();
+                }
+                break;
+            case ExtractorActivity.VIDEO_TYPE:
+                if (isVideoExtractorDone) {
+                    mMediaMuxer.stop();
+                    mMediaMuxer.release();
+                }
+                break;
+        }
+
     }
 }

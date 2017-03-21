@@ -11,9 +11,9 @@ import ffmpeg.egg.io.mediacodectest.activity.BeautyActivity;
 import ffmpeg.egg.io.mediacodectest.activity.DecoderPlayActivity;
 import ffmpeg.egg.io.mediacodectest.activity.EncoderOpenglActiivity;
 import ffmpeg.egg.io.mediacodectest.activity.EncoderTestActivity;
-import ffmpeg.egg.io.mediacodectest.activity.ExtractorTestActivity;
 import ffmpeg.egg.io.mediacodectest.activity.FilterTestActivity;
 import ffmpeg.egg.io.mediacodectest.activity.EditActivity;
+import ffmpeg.egg.io.mediacodectest.activity.ExtractorActivity;
 
 public class MainActivity extends AppCompatActivity {
     public static final String PATH = "file_path";
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mfilePath = Environment.getExternalStorageDirectory().toString()
-                + "/dcim/camera/"+"VID_20161130_153028.mp4";
+                + "/dcim/camera/"+"VID_20170221_113401.mp4";
         initView();
     }
 
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         mExtractorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ExtractorTestActivity.class);
+                Intent intent = new Intent(MainActivity.this, ExtractorActivity.class);
                 intent.putExtra(PATH,mfilePath);
                 startActivity(intent);
             }
