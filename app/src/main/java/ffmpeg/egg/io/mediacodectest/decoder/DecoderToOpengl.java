@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import ffmpeg.egg.io.mediacodectest.extractor.ExtractorToDecoder;
-import ffmpeg.egg.io.mediacodectest.openglbase.InputSurface;
-import ffmpeg.egg.io.mediacodectest.openglbase.OutputSurface;
+import ffmpeg.egg.io.mediacodectest.surface.InputSurface;
+import ffmpeg.egg.io.mediacodectest.surface.SimpleOutputSurface;
 
 /**
  * Created by zhulinping on 17/2/7.
@@ -23,7 +23,7 @@ public class DecoderToOpengl {
     private MediaCodec mAudioEncoder;
     private MediaCodec mVideoEncoder;
     final int TIMEOUT_USEC = 10000;
-    private OutputSurface mOutputSurface;
+    private SimpleOutputSurface mSimpleOutputSurface;
     private InputSurface mInputSurface;
     Surface surface;
     int audioIndex = -1;
@@ -52,8 +52,8 @@ public class DecoderToOpengl {
             MediaFormat videoFormat = mExtractor.getmVideoFormat();
             String mimeVideo = videoFormat.getString(MediaFormat.KEY_MIME);
             mVideoDecoder = MediaCodec.createDecoderByType(mimeVideo);
-            mOutputSurface = new OutputSurface();
-            mVideoDecoder.configure(videoFormat,mOutputSurface.getmSurface(), null, 0);
+            mSimpleOutputSurface = new SimpleOutputSurface();
+            mVideoDecoder.configure(videoFormat, mSimpleOutputSurface.getmSurface(), null, 0);
             //mVideoDecoder.configure(videoFormat,surface, null, 0);
             mVideoDecoder.start();
         } catch (IOException e) {
@@ -139,8 +139,8 @@ public class DecoderToOpengl {
                 return;
             }
             Log.d("mytest", "video output info"+mBufferInfo.size+"time"+mBufferInfo.presentationTimeUs);
-            mOutputSurface.awaitNewImage();
-            mOutputSurface.drawImage();
+            mSimpleOutputSurface.awaitNewImage();
+            mSimpleOutputSurface.drawImage();
             mInputSurface.setPresentationTime(mBufferInfo.presentationTimeUs*1000);
             mInputSurface.swapBuffers();
         }

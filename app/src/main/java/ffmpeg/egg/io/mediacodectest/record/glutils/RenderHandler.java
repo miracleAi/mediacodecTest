@@ -32,8 +32,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-import ffmpeg.egg.io.mediacodectest.edit.render.FilterRender;
-import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
+import ffmpeg.egg.io.mediacodectest.render.FilterRender;
+import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 
 

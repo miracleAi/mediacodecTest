@@ -1,14 +1,14 @@
-package ffmpeg.egg.io.mediacodectest.edit.muxer;
+package ffmpeg.egg.io.mediacodectest.muxer;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
+import android.util.Log;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import ffmpeg.egg.io.mediacodectest.edit.utils.MimeTools;
-
+import ffmpeg.egg.io.mediacodectest.utils.MimeTools;
 
 /**
  * Created by zhulinping on 17/2/13.
@@ -57,11 +57,13 @@ public class Muxer {
         if (mIsSilence) {
             if (mVideoTrack != -1 && !isStarted()) {
                 mMuxer.start();
+                Log.d("mytest","muxer started");
                 mIsMuxerStart = true;
             }
         } else {
             if (mAudioTrack != -1 && mVideoTrack != -1 && !isStarted()) {
                 mMuxer.start();
+                Log.d("mytest","muxer started");
                 mIsMuxerStart = true;
             }
         }

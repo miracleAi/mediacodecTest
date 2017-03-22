@@ -33,7 +33,7 @@ import android.view.Surface;
 
 import java.io.IOException;
 
-import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
+import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 import ffmpeg.egg.io.mediacodectest.record.glutils.RenderHandler;
 

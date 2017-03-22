@@ -1,4 +1,4 @@
-package ffmpeg.egg.io.mediacodectest.edit.utils;
+package ffmpeg.egg.io.mediacodectest.utils;
 
 import android.content.Context;
 
@@ -52,5 +52,8 @@ public class TranscodingResources {
     }
     public int getVideoHeight(){
         return videoHeight;
+    }
+    public Context getmContext(){
+        return mContext;
     }
 }

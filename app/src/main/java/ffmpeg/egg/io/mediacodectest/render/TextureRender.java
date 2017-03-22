@@ -1,4 +1,4 @@
-package ffmpeg.egg.io.mediacodectest.openglbase;
+package ffmpeg.egg.io.mediacodectest.render;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

@@ -1,41 +1,50 @@
-package ffmpeg.egg.io.mediacodectest.edit.decoder;
+package ffmpeg.egg.io.mediacodectest.decoderplay;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.util.Log;
 
-import ffmpeg.egg.io.mediacodectest.edit.surface.InputSurface;
-import ffmpeg.egg.io.mediacodectest.edit.surface.OutputSurface;
-import ffmpeg.egg.io.mediacodectest.edit.utils.StageDoneCallback;
-import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
+import ffmpeg.egg.io.mediacodectest.surface.OutputSurface;
+import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
+import ffmpeg.egg.io.mediacodectest.surface.InputSurface;
+import ffmpeg.egg.io.mediacodectest.utils.StageDoneCallback;
 
 /**
- * Created by zhulinping on 17/2/15.
+ * Created by zhulinping on 17/3/22.
  */
 
-public class VideoDecoder extends BaseDecoder {
-    protected OutputSurface mOutputSurface;
+public class VideoDecoder extends BaseDecoder{
     private MediaCodec mEncoder;
+    private OutputSurface mOutputSurface;
     protected InputSurface mInputSurface;
     MediaCodec.BufferInfo mBufferInfo;
-
-    public VideoDecoder(MediaFormat paramMediaFormat, TranscodingResources resources, StageDoneCallback callback) {
-        this(paramMediaFormat, new OutputSurface(resources), callback);
+    public VideoDecoder(MediaFormat formate, TranscodingResources recources,StageDoneCallback callback){
+        this(formate,new OutputSurface(recources),callback);
     }
-
     public VideoDecoder(MediaFormat paramMediaFormat, OutputSurface paramSurface, StageDoneCallback callback) {
         super(paramMediaFormat, paramSurface.getmSurface(), callback);
         mOutputSurface = paramSurface;
     }
 
     @Override
+    public void processFrame() {
+        if(mFrameToProcess == -1){
+            getFrameFromDecoder();
+        }
+        outputFrame();
+    }
+
+    @Override
     public void getFrameFromDecoder() {
+        if(mDecoder == null){
+            return;
+        }
         mBufferInfo = new MediaCodec.BufferInfo();
-        int decoderStatus = mDecoder.dequeueOutputBuffer(mBufferInfo, 10000L);
+        int decoderStatus = mDecoder.dequeueOutputBuffer(mBufferInfo,10000);
         if (decoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
             // no output available yet
-            Log.d("mytest", "no output from decoder available");
+            Log.d("mytest", "video no output from decoder available");
         } else if (decoderStatus == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
             // not important for us, since we're using Surface
             Log.d("mytest", "decoder output buffers changed");
@@ -47,13 +56,12 @@ public class VideoDecoder extends BaseDecoder {
             throw new RuntimeException(
                     "unexpected result from decoder.dequeueOutputBuffer: " +
                             decoderStatus);
-        } else { // decoderStatus >= 0
-            if (mBufferInfo.size != 0) {
-                Log.d("mytest", "video output true");
-                mDecoder.releaseOutputBuffer(decoderStatus, true);
-            } else {
-                Log.d("mytest", "video output false");
-                mDecoder.releaseOutputBuffer(decoderStatus, false);
+        } else {
+            if(mBufferInfo.size > 0){
+                Log.d("mytest","video avalible");
+                mDecoder.releaseOutputBuffer(decoderStatus,true);
+            }else{
+                mDecoder.releaseOutputBuffer(decoderStatus,false);
             }
             mFrameToProcess = decoderStatus;
         }
@@ -67,31 +75,19 @@ public class VideoDecoder extends BaseDecoder {
         if(mEncoder == null){
             return;
         }
+        if(mInputSurface == null){
+            return;
+        }
         if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
             mEncoder.signalEndOfInputStream();
             mFrameToProcess = -1;
             stageComplete();
             return;
         }
-        if (mInputSurface == null) {
-            Log.d(TAG, "Error getting encoder input surface");
-            return;
-        }
         mOutputSurface.drawImage();
-        mInputSurface.setPresentationTime(mBufferInfo.presentationTimeUs * 1000L);
+        mInputSurface.setPresentationTime(mBufferInfo.presentationTimeUs*1000L);
         mInputSurface.swapBuffers();
         mFrameToProcess = -1;
-    }
-
-    @Override
-    public void processFrame() {
-        if (mFrameToProcess == -1) {
-            getFrameFromDecoder();
-        }
-        outputFrame();
-    }
-    public void setFilter(GPUImageFilter filter){
-        mOutputSurface.setFilter(filter,true);
     }
     public void setmEncoder(MediaCodec encoder){
         mEncoder = encoder;
@@ -99,5 +95,9 @@ public class VideoDecoder extends BaseDecoder {
     public void setmInputSurface(InputSurface surface){
         mInputSurface = surface;
     }
-
+    public void setFilter(GPUImageFilter filter){
+        if(mOutputSurface != null){
+            mOutputSurface.setFilter(filter,true);
+        }
+    }
 }

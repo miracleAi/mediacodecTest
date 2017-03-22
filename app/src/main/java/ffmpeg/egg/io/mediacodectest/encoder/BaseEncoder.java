@@ -1,4 +1,4 @@
-package ffmpeg.egg.io.mediacodectest.edit.encoder;
+package ffmpeg.egg.io.mediacodectest.encoder;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
@@ -6,17 +6,15 @@ import android.util.Log;
 
 import java.nio.ByteBuffer;
 
-import ffmpeg.egg.io.mediacodectest.edit.muxer.Muxer;
-import ffmpeg.egg.io.mediacodectest.edit.utils.Stage;
-import ffmpeg.egg.io.mediacodectest.edit.utils.StageDoneCallback;
-
+import ffmpeg.egg.io.mediacodectest.muxer.Muxer;
+import ffmpeg.egg.io.mediacodectest.utils.Stage;
+import ffmpeg.egg.io.mediacodectest.utils.StageDoneCallback;
 
 /**
- * Created by zhulinping on 17/2/15.
+ * Created by zhulinping on 17/3/22.
  */
 
-public abstract class BaseEncoder extends Stage {
-    private long lastTimeStamp = -1L;
+public abstract class BaseEncoder extends Stage{
     protected MediaCodec mEncoder;
     protected Muxer muxer;
     protected int mOutputTrack = -1;
@@ -32,7 +30,12 @@ public abstract class BaseEncoder extends Stage {
 
     public abstract int addOrRetrieveMixerTrack(MediaFormat paramMediaFormat);
 
+
+    @Override
     public void processFrame() {
+        if(mEncoder == null){
+            throw new NullPointerException("encoder null");
+        }
         if ((mOutputTrack != -1) && (!muxer.isStarted())) {
             Log.d("ENCODER", "Mixer is not started returning");
             return;
@@ -42,7 +45,7 @@ public abstract class BaseEncoder extends Stage {
         int encoderStatus = mEncoder.dequeueOutputBuffer(mBufferInfo, 10000L);
         if (encoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
             // no output available yet
-            Log.d("mytest", "video no output available, spinning to await EOS");
+            Log.d("mytest", "no output available, spinning to await EOS");
         } else if (encoderStatus == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
             // not expected for an encoder
             outputBuffers = mEncoder.getOutputBuffers();
@@ -61,8 +64,13 @@ public abstract class BaseEncoder extends Stage {
                 // The codec config data was pulled out and fed to the muxer when we got
                 // the INFO_OUTPUT_FORMAT_CHANGED status.  Ignore it.
                 mBufferInfo.size = 0;
+                mEncoder.releaseOutputBuffer(encoderStatus, false);
+                return;
             }
-
+            if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
+                stageComplete();
+                return;
+            }
             if (mBufferInfo.size != 0) {
                 // adjust the ByteBuffer values to match BufferInfo (not needed?)
                 encodedData.position(mBufferInfo.offset);
@@ -70,17 +78,13 @@ public abstract class BaseEncoder extends Stage {
                 muxer.writeSampleData(mOutputTrack, encodedData, mBufferInfo);
             }
             mEncoder.releaseOutputBuffer(encoderStatus, false);
-            if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
-                Log.d("mytest","encoder done");
-                stageComplete();
-            }
         }
     }
-
-    public void release() {
+    public void release(){
         if(mEncoder != null){
             mEncoder.stop();
             mEncoder.release();
+            mEncoder = null;
         }
     }
 }

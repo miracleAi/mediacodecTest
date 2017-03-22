@@ -1,8 +1,8 @@
-package ffmpeg.egg.io.mediacodectest.edit.task;
+package ffmpeg.egg.io.mediacodectest.task;
 
 
-import ffmpeg.egg.io.mediacodectest.edit.surface.InputSurface;
-import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
+import ffmpeg.egg.io.mediacodectest.surface.InputSurface;
+import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 
 /**

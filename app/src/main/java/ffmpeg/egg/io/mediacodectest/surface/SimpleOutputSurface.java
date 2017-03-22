@@ -1,15 +1,17 @@
-package ffmpeg.egg.io.mediacodectest.openglbase;
+package ffmpeg.egg.io.mediacodectest.surface;
 
 import android.graphics.SurfaceTexture;
 import android.util.Log;
 import android.view.Surface;
 
+import ffmpeg.egg.io.mediacodectest.render.TextureRender;
+
 /**
  * Created by zhulinping on 17/2/8.
  */
 
-public class OutputSurface implements SurfaceTexture.OnFrameAvailableListener{
-    private static final String TAG = "OutputSurface";
+public class SimpleOutputSurface implements SurfaceTexture.OnFrameAvailableListener{
+    private static final String TAG = "SimpleOutputSurface";
     private SurfaceTexture mSurfaceTexture;
     private Surface mSurface;
     private TextureRender mTextureRender;
@@ -17,7 +19,7 @@ public class OutputSurface implements SurfaceTexture.OnFrameAvailableListener{
     private boolean mFrameAvailable;
 
 
-    public OutputSurface(){
+    public SimpleOutputSurface(){
         setup();
     }
     private void setup() {

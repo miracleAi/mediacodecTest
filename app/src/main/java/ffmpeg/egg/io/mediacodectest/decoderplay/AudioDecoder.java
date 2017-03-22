@@ -1,22 +1,23 @@
-package ffmpeg.egg.io.mediacodectest.edit.decoder;
+package ffmpeg.egg.io.mediacodectest.decoderplay;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.util.Log;
+import android.view.Surface;
 
 import java.nio.ByteBuffer;
 
-import ffmpeg.egg.io.mediacodectest.edit.utils.StageDoneCallback;
+import ffmpeg.egg.io.mediacodectest.utils.StageDoneCallback;
 
 /**
- * Created by zhulinping on 17/2/15.
+ * Created by zhulinping on 17/3/22.
  */
 
 public class AudioDecoder extends BaseDecoder{
+    private MediaCodec.BufferInfo mBufferInfo;
     private MediaCodec mEncoder;
-    MediaCodec.BufferInfo mBufferInfo = new MediaCodec.BufferInfo();
-    public AudioDecoder(MediaFormat paramMediaFormat, StageDoneCallback callback) {
-        super(paramMediaFormat, null, callback);
+    public AudioDecoder(MediaFormat paramMediaFormat, Surface paramSurface, StageDoneCallback callback) {
+        super(paramMediaFormat, paramSurface, callback);
     }
 
     @Override
@@ -29,6 +30,11 @@ public class AudioDecoder extends BaseDecoder{
 
     @Override
     public void getFrameFromDecoder() {
+        if(mDecoder == null){
+            return;
+            //throw new NullPointerException("audio decoder null");
+        }
+        mBufferInfo = new MediaCodec.BufferInfo();
         int outputIndex = mDecoder.dequeueOutputBuffer(mBufferInfo, 10000L);
         if (outputIndex < 0) {
             return;
@@ -45,23 +51,31 @@ public class AudioDecoder extends BaseDecoder{
         if(mFrameToProcess == -1){
             return;
         }
+        if(mEncoder == null){
+            return;
+        }
         ByteBuffer[] outputBuffers = mDecoder.getOutputBuffers();
         ByteBuffer[] inputBuffers = mEncoder.getInputBuffers();
-        int index = mEncoder.dequeueInputBuffer(10000L);
-        if (index == -1) {
+        int inputIndex = mEncoder.dequeueInputBuffer(10000);
+        if (inputIndex == -1) {
             Log.d("AUDIODECODER", "no audio encoder input buffer");
             return;
         }
-        ByteBuffer localByteBuffer = inputBuffers[index];
+        ByteBuffer localByteBuffer = inputBuffers[inputIndex];
         int size = mBufferInfo.size;
         if (size >= 0) {
-            ByteBuffer buffer = outputBuffers[mFrameToProcess];
+            ByteBuffer buffer = outputBuffers[mFrameToProcess].duplicate();
+            buffer.position(mBufferInfo.offset);
+            buffer.limit(mBufferInfo.offset + mBufferInfo.size);
             localByteBuffer.position(0);
             localByteBuffer.put(buffer);
-            mEncoder.queueInputBuffer(index, 0, size, mBufferInfo.presentationTimeUs, mBufferInfo.flags);
+            mEncoder.queueInputBuffer(inputIndex, 0, size, mBufferInfo.presentationTimeUs, mBufferInfo.flags);
         }
         mDecoder.releaseOutputBuffer(mFrameToProcess, false);
         mFrameToProcess = -1;
+        if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
+            stageComplete();
+        }
     }
     public void setmEncoder(MediaCodec encoder){
         mEncoder = encoder;

@@ -1,4 +1,4 @@
-package ffmpeg.egg.io.mediacodectest.edit.utils;
+package ffmpeg.egg.io.mediacodectest.utils;
 
 import android.media.MediaMetadataRetriever;
 

@@ -1,8 +1,6 @@
 package ffmpeg.egg.io.mediacodectest.encoder;
 
 import android.media.MediaCodec;
-import android.media.MediaCodecInfo;
-import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
 import android.os.Environment;
@@ -11,12 +9,8 @@ import android.util.Log;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import ffmpeg.egg.io.mediacodectest.decoder.DecoderFilter;
-import ffmpeg.egg.io.mediacodectest.extractor.ExtractorToDecoder;
-import ffmpeg.egg.io.mediacodectest.openglbase.InputSurface;
+import ffmpeg.egg.io.mediacodectest.surface.InputSurface;
 import ffmpeg.egg.io.mediacodectest.utils.DoneCallback;
-
-import static android.R.attr.format;
 
 /**
  * Created by zhulinping on 17/2/9.

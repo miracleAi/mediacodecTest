@@ -1,4 +1,4 @@
-package ffmpeg.egg.io.mediacodectest.edit.surface;
+package ffmpeg.egg.io.mediacodectest.surface;
 
 import android.opengl.EGL14;
 import android.opengl.EGLConfig;
@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.Surface;
 
 /**
- * Created by zhulinping on 16/11/21.
+ * Created by zhulinping on 17/2/8.
  */
 
 public class InputSurface {

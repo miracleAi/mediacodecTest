@@ -1,21 +1,24 @@
-package ffmpeg.egg.io.mediacodectest.edit.task;
+package ffmpeg.egg.io.mediacodectest.task;
 
+import android.content.Intent;
 import android.media.MediaCodecInfo;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 
 import java.io.IOException;
 
-import ffmpeg.egg.io.mediacodectest.edit.decoder.AudioDecoder;
-import ffmpeg.egg.io.mediacodectest.edit.decoder.VideoDecoder;
-import ffmpeg.egg.io.mediacodectest.edit.encoder.AudioEncoder;
-import ffmpeg.egg.io.mediacodectest.edit.encoder.VideoEncoder;
-import ffmpeg.egg.io.mediacodectest.edit.extractor.AudioExtractor;
-import ffmpeg.egg.io.mediacodectest.edit.extractor.VideoExtractor;
-import ffmpeg.egg.io.mediacodectest.edit.muxer.Muxer;
-import ffmpeg.egg.io.mediacodectest.edit.utils.StageDoneCallback;
-import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
+import ffmpeg.egg.io.mediacodectest.activity.EditActivity;
+import ffmpeg.egg.io.mediacodectest.decoderplay.AudioDecoder;
+import ffmpeg.egg.io.mediacodectest.decoderplay.VideoDecoder;
+import ffmpeg.egg.io.mediacodectest.encoder.AudioEncoder;
+import ffmpeg.egg.io.mediacodectest.encoder.VideoEncoder;
+import ffmpeg.egg.io.mediacodectest.extractor.AudioExtractor;
+import ffmpeg.egg.io.mediacodectest.extractor.VideoExtractor;
+import ffmpeg.egg.io.mediacodectest.utils.EncoderConfiguration;
+import ffmpeg.egg.io.mediacodectest.utils.StageDoneCallback;
+import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
+import ffmpeg.egg.io.mediacodectest.muxer.Muxer;
 
 /**
  * Created by zhulinping on 17/2/15.
@@ -47,13 +50,13 @@ public class Transcoder {
         mVideoExtractor = new VideoExtractor(path, new VideoExtractorDone());
         mAudioEncoder = new AudioEncoder(mMuxer, getAudioMediaFormate(), new AudioEncoderDoneCallback());
         mVideoEncoder = new VideoEncoder(mMuxer, getVideoFormate(), new VideoEncoderCallback());
-        mAudioDecoder = new AudioDecoder(mAudioExtractor.getFormat(), new AudioDecodenDone());
+        mAudioDecoder = new AudioDecoder(mAudioExtractor.getFormat(),null,new AudioDecodenDone());
         mVideoDecoder = new VideoDecoder(mVideoExtractor.getFormat(), recources, new VideoDeocderDone());
         mAudioExtractor.setDecoder(mAudioDecoder.getmDecoder());
         mVideoExtractor.setDecoder(mVideoDecoder.getmDecoder());
         mAudioDecoder.setmEncoder(mAudioEncoder.getCodec());
         mVideoDecoder.setmEncoder(mVideoEncoder.getCodec());
-        mVideoDecoder.setmInputSurface(mVideoEncoder.getInputSurface());
+        mVideoDecoder.setmInputSurface(mVideoEncoder.getmInputSurface());
     }
 
     public void setFilter(GPUImageFilter filter) {
@@ -70,7 +73,7 @@ public class Transcoder {
         }
     }
 
-    private MediaFormat getAudioMediaFormate() {
+    private EncoderConfiguration getAudioMediaFormate() {
         MediaExtractor extractor = new MediaExtractor();
         try {
             extractor.setDataSource(mFilePath);
@@ -89,18 +92,20 @@ public class Transcoder {
                 audioFormat.getInteger("sample-rate"),
                 audioFormat.getInteger("channel-count"));
         paramString.setInteger("bitrate", 57344);
-        ;
-        return paramString;
+        EncoderConfiguration config = new EncoderConfiguration("audio/mp4a-latm",paramString);
+        return config;
     }
 
-    private MediaFormat getVideoFormate() {
+    private EncoderConfiguration getVideoFormate() {
         MediaFormat format = MediaFormat.createVideoFormat("video/avc", mRecources.getVideoWidth(), mRecources.getVideoHeight());
         format.setInteger(MediaFormat.KEY_COLOR_FORMAT,
                 MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
         format.setInteger(MediaFormat.KEY_BIT_RATE, 1300000);
         format.setInteger(MediaFormat.KEY_FRAME_RATE, 30);
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 10);
-        return format;
+        EncoderConfiguration config = new EncoderConfiguration("video/avc",format);
+
+        return config;
     }
 
     public void transcoder() {
@@ -163,10 +168,11 @@ public class Transcoder {
         @Override
         public void done() {
             mAudioEncoderDone = true;
-            mAudioEncoder.release();
-            mAudioDecoder.release();
             mAudioExtractor.release();
+            mAudioDecoder.release();
+            mAudioEncoder.release();
             if (mVideoEncoderDone) {
+                mRecources.getmContext().sendBroadcast(new Intent(EditActivity.ENCODE_DONE));
                 mMuxer.stopMuxer();
             }
         }
@@ -177,10 +183,11 @@ public class Transcoder {
         @Override
         public void done() {
             mVideoEncoderDone = true;
-            mVideoEncoder.release();
-            mVideoDecoder.release();
             mVideoExtractor.release();
+            mVideoDecoder.release();
+            mVideoEncoder.release();
             if (mAudioEncoderDone) {
+                mRecources.getmContext().sendBroadcast(new Intent(EditActivity.ENCODE_DONE));
                 mMuxer.stopMuxer();
             }
         }

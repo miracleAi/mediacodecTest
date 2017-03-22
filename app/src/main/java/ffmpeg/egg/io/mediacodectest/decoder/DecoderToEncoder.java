@@ -60,7 +60,7 @@ public class DecoderToEncoder {
         }
         if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
             mAudioDecoder.releaseOutputBuffer(outputIndex, false);
-            Log.d("mytest", "biffer config");
+            Log.d("mytest", "buffer config");
             return;
         }
         int index = mAudioEncoder.dequeueInputBuffer(TIMEOUT_USEC);

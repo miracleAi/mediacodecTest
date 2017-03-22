@@ -13,7 +13,7 @@ import java.nio.ByteBuffer;
 
 import ffmpeg.egg.io.mediacodectest.decoder.DecoderToOpengl;
 import ffmpeg.egg.io.mediacodectest.extractor.ExtractorToDecoder;
-import ffmpeg.egg.io.mediacodectest.openglbase.InputSurface;
+import ffmpeg.egg.io.mediacodectest.surface.InputSurface;
 import ffmpeg.egg.io.mediacodectest.utils.DoneCallback;
 
 /**

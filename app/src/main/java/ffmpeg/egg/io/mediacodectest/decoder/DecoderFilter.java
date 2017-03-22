@@ -8,10 +8,10 @@ import android.util.Log;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import ffmpeg.egg.io.mediacodectest.edit.surface.OutputSurface;
-import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
+import ffmpeg.egg.io.mediacodectest.surface.OutputSurface;
+import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
-import ffmpeg.egg.io.mediacodectest.openglbase.InputSurface;
+import ffmpeg.egg.io.mediacodectest.surface.InputSurface;
 
 /**
  * Created by zhulinping on 17/2/9.

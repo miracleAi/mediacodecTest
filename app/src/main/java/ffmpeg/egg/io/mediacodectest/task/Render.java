@@ -1,4 +1,4 @@
-package ffmpeg.egg.io.mediacodectest.edit.task;
+package ffmpeg.egg.io.mediacodectest.task;
 
 import android.util.Log;
 
@@ -7,13 +7,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
-import ffmpeg.egg.io.mediacodectest.edit.decoder.AudioTrackDecoder;
+import ffmpeg.egg.io.mediacodectest.decoderplay.AudioTrackDecoder;
 import ffmpeg.egg.io.mediacodectest.edit.decoder.VideoFilterDecoder;
-import ffmpeg.egg.io.mediacodectest.edit.extractor.AudioExtractor;
-import ffmpeg.egg.io.mediacodectest.edit.extractor.VideoExtractor;
-import ffmpeg.egg.io.mediacodectest.edit.surface.InputSurface;
-import ffmpeg.egg.io.mediacodectest.edit.utils.StageDoneCallback;
-import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
+import ffmpeg.egg.io.mediacodectest.extractor.AudioExtractor;
+import ffmpeg.egg.io.mediacodectest.extractor.VideoExtractor;
+import ffmpeg.egg.io.mediacodectest.surface.InputSurface;
+import ffmpeg.egg.io.mediacodectest.utils.StageDoneCallback;
+import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 
 /**
@@ -184,13 +184,14 @@ public class Render {
 
     public void abort() {
         mAbort = true;
+        mAudioExtractor.abort();
+        mVideoExtractor.abort();
     }
     class AudioExtractorDone implements StageDoneCallback{
 
         @Override
         public void done() {
             mAudioExtractorDone = true;
-            Log.d("mytest", "auido extractor done");
         }
     }
     class VideoExtractorDone implements StageDoneCallback{
@@ -198,7 +199,6 @@ public class Render {
         @Override
         public void done() {
             mVideoExtractorDone = true;
-            Log.d("mytest", "video extractor done");
         }
     }
     class AudioDecoderDone implements StageDoneCallback{
@@ -206,7 +206,6 @@ public class Render {
         @Override
         public void done() {
             mAudioDecodeerDone = true;
-            Log.d("mytest", "auido decoder done");
         }
     }
     class VideoDecoderDone implements StageDoneCallback {
@@ -214,7 +213,6 @@ public class Render {
         @Override
         public void done() {
             mVideoDecoderDone = true;
-            Log.d("mytest", "video decoder done");
 
         }
     }

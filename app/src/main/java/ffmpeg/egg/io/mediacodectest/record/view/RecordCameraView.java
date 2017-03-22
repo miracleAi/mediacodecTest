@@ -19,8 +19,8 @@ import java.util.List;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import ffmpeg.egg.io.mediacodectest.edit.render.FilterRender;
-import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
+import ffmpeg.egg.io.mediacodectest.render.FilterRender;
+import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 import ffmpeg.egg.io.mediacodectest.filters.MagicLookupFilter;
 import ffmpeg.egg.io.mediacodectest.openglutils.OpenGlUtils;

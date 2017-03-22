@@ -1,15 +1,15 @@
-package ffmpeg.egg.io.mediacodectest.edit.surface;
+package ffmpeg.egg.io.mediacodectest.surface;
 
 import android.graphics.SurfaceTexture;
 import android.view.Surface;
 
-import ffmpeg.egg.io.mediacodectest.edit.render.FilterRender;
-import ffmpeg.egg.io.mediacodectest.edit.utils.ImageTransformationMatrix;
-import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
+import ffmpeg.egg.io.mediacodectest.openglutils.ImageTransformationMatrix;
+import ffmpeg.egg.io.mediacodectest.render.FilterRender;
+import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
 
 /**
- * Created by zhulinping on 16/11/21.
+ * Created by zhulinping on 17/3/22.
  */
 
 public class OutputSurface implements SurfaceTexture.OnFrameAvailableListener {
@@ -49,7 +49,7 @@ public class OutputSurface implements SurfaceTexture.OnFrameAvailableListener {
             mSTMatrix = new ImageTransformationMatrix().adjustForTranscoderTransformation();
             //mSurfaceTexture.getTransformMatrix(mSTMatrix);
         }else if(mResources.getVideoRotation() == 90){
-             mSTMatrix = new ImageTransformationMatrix().rotateRight();
+            mSTMatrix = new ImageTransformationMatrix().rotateRight();
         }else if(mResources.getVideoRotation() == 180){
             mSTMatrix = new ImageTransformationMatrix().rotate180Degrees();
         }else{

@@ -1,4 +1,4 @@
-package ffmpeg.egg.io.mediacodectest.edit.render;
+package ffmpeg.egg.io.mediacodectest.render;
 
 import android.opengl.GLES20;
 import android.util.Log;

@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 
 import java.io.File;
@@ -20,12 +19,11 @@ import java.util.concurrent.Executors;
 
 import ffmpeg.egg.io.mediacodectest.MainActivity;
 import ffmpeg.egg.io.mediacodectest.R;
-import ffmpeg.egg.io.mediacodectest.edit.surface.InputSurface;
-import ffmpeg.egg.io.mediacodectest.edit.task.RenderTask;
-import ffmpeg.egg.io.mediacodectest.edit.task.TranscoderTask;
-import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
-import ffmpeg.egg.io.mediacodectest.edit.utils.VideoMetadataReader;
-import ffmpeg.egg.io.mediacodectest.filters.CombineFilter;
+import ffmpeg.egg.io.mediacodectest.surface.InputSurface;
+import ffmpeg.egg.io.mediacodectest.task.RenderTask;
+import ffmpeg.egg.io.mediacodectest.task.TranscoderTask;
+import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
+import ffmpeg.egg.io.mediacodectest.utils.VideoMetadataReader;
 import ffmpeg.egg.io.mediacodectest.openglutils.FilterFactory;
 
 public class EditActivity extends AppCompatActivity {
@@ -48,9 +46,15 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test);
         mFilePath = getIntent().getStringExtra(MainActivity.PATH);
         mExecutor = Executors.newCachedThreadPool();
-        initReceiver();
         init();
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initReceiver();
+
     }
 
     private void init() {
@@ -69,8 +73,6 @@ public class EditActivity extends AppCompatActivity {
             mResoureces.setVideoWidth(reader.getWidth());
             mResoureces.setVideoHeight(reader.getHeight());
         }
-        //mResoureces.setSurfaceWidth(width);
-        //mResoureces.setSurfaceHeight(height);
         reader.release();
     }
 

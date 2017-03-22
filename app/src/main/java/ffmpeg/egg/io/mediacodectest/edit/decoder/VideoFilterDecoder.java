@@ -6,11 +6,12 @@ import android.util.Log;
 
 import java.io.IOException;
 
-import ffmpeg.egg.io.mediacodectest.edit.surface.InputSurface;
-import ffmpeg.egg.io.mediacodectest.edit.surface.OutputSurface;
-import ffmpeg.egg.io.mediacodectest.edit.utils.StageDoneCallback;
-import ffmpeg.egg.io.mediacodectest.edit.utils.TranscodingResources;
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
+import ffmpeg.egg.io.mediacodectest.surface.InputSurface;
+import ffmpeg.egg.io.mediacodectest.surface.OutputSurface;
+import ffmpeg.egg.io.mediacodectest.surface.SimpleOutputSurface;
+import ffmpeg.egg.io.mediacodectest.utils.StageDoneCallback;
+import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
 
 /**
  * Created by zhulinping on 17/2/16.
@@ -74,15 +75,11 @@ public class VideoFilterDecoder {
         int decoderStatus = mVideoDecoder.dequeueOutputBuffer(mBufferInfo, TIMEOUT_USEC);
         if (decoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
             // no output available yet
-            Log.d("mytest", "no output from decoder available");
         } else if (decoderStatus == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
             // not important for us, since we're using Surface
-            Log.d("mytest", "decoder output buffers changed");
         } else if (decoderStatus == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
             MediaFormat newFormat = mVideoDecoder.getOutputFormat();
-            Log.d("mytest", "decoder output format changed: " + newFormat);
         } else if (decoderStatus < 0) {
-            Log.d("mytest", "decoder exception" + decoderStatus);
             throw new RuntimeException(
                     "unexpected result from decoder.dequeueOutputBuffer: " +
                             decoderStatus);
@@ -93,7 +90,6 @@ public class VideoFilterDecoder {
                 mVideoDecoder.releaseOutputBuffer(decoderStatus, false);
             }
             if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
-                Log.d("mytest", "video output EOS");
                 mCallback.done();
                 return;
             }

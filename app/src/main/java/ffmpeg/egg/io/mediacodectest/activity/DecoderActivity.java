@@ -7,10 +7,8 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 
 import ffmpeg.egg.io.mediacodectest.MainActivity;
 import ffmpeg.egg.io.mediacodectest.R;

@@ -11,7 +11,7 @@ import ffmpeg.egg.io.mediacodectest.utils.StageDoneCallback;
  * Created by zhulinping on 17/3/21.
  */
 
-public class VideoRenderDecoder extends BaseDecoder{
+public class VideoRenderDecoder extends BaseDecoder {
     final int TIMEOUT_USEC = 10000;
     private MediaCodec.BufferInfo mBufferInfo = new MediaCodec.BufferInfo();
     private long mPrevMonoUsec = 0L;
