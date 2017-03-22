@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context="ffmpeg.egg.io.mediacodectest.activity.EncoderOpenglActiivity">
+    tools:context="ffmpeg.egg.io.mediacodectest.simple.EncoderOpenglActiivity">
     <Button
         android:id="@+id/auido_and_video"
         android:layout_width="match_parent"

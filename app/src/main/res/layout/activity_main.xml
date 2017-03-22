@@ -12,63 +12,60 @@
         android:id="@+id/extractor_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="18sp"
         android:layout_marginTop="10dp"
         android:background="@color/colorPrimary"
-        android:text="AudioAndVideoExtractor"/>
+        android:padding="10dp"
+        android:text="Extractor"
+        android:textSize="18sp" />
+
     <Button
         android:id="@+id/decoder_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="18sp"
         android:layout_marginTop="10dp"
         android:background="@color/colorPrimary"
-        android:text="AudioAndVideoDecoder"/>
+        android:padding="10dp"
+        android:text="DecoderPlay"
+        android:textSize="18sp" />
+
     <Button
         android:id="@+id/encoder_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="18sp"
         android:layout_marginTop="10dp"
         android:background="@color/colorPrimary"
-        android:text="AudioAndVideoEncoder"/>
+        android:padding="10dp"
+        android:text="Encoder"
+        android:textSize="18sp" />
+
     <Button
         android:id="@+id/opengl_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="18sp"
         android:layout_marginTop="10dp"
         android:background="@color/colorPrimary"
-        android:text="OpenglEncoder"/>
+        android:padding="10dp"
+        android:text="OpenglEncoder"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
     <Button
-        android:id="@+id/filter_btn"
+        android:id="@+id/beauty_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="18sp"
         android:layout_marginTop="10dp"
         android:background="@color/colorPrimary"
-        android:text="FilterEncoder"/>
-    <Button
-    android:id="@+id/beauty_btn"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="10dp"
-    android:textSize="18sp"
-    android:layout_marginTop="10dp"
-    android:background="@color/colorPrimary"
-    android:text="BeautyEncoder"/>
+        android:padding="10dp"
+        android:text="Beauty"
+        android:textSize="18sp" />
+
     <Button
         android:id="@+id/edit_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="18sp"
         android:layout_marginTop="10dp"
         android:background="@color/colorPrimary"
-        android:text="EditFilter"/>
+        android:padding="10dp"
+        android:text="Edit"
+        android:textSize="18sp" />
 </LinearLayout>

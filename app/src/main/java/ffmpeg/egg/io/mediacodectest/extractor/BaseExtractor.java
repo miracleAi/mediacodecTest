@@ -69,7 +69,6 @@ public class BaseExtractor extends Stage {
                 mExtractor.release();
                 mExtractor = null;
             }
-            return;
         } catch (Exception localException) {
         }
     }

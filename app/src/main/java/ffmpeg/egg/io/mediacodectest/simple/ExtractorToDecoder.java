@@ -1,4 +1,4 @@
-package ffmpeg.egg.io.mediacodectest.extractor;
+package ffmpeg.egg.io.mediacodectest.simple;
 
 import android.media.MediaCodec;
 import android.media.MediaExtractor;

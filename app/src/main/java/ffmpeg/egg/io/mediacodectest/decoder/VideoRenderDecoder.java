@@ -1,4 +1,4 @@
-package ffmpeg.egg.io.mediacodectest.decoderplay;
+package ffmpeg.egg.io.mediacodectest.decoder;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
@@ -56,6 +56,9 @@ public class VideoRenderDecoder extends BaseDecoder {
 
     @Override
     public void getFrameFromDecoder() {
+        if(mDecoder == null){
+            return;
+        }
         int decoderStatus = mDecoder.dequeueOutputBuffer(mBufferInfo, TIMEOUT_USEC);
         if (decoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
             // no output available yet

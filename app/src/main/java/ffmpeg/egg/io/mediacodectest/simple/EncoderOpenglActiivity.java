@@ -1,6 +1,5 @@
-package ffmpeg.egg.io.mediacodectest.activity;
+package ffmpeg.egg.io.mediacodectest.simple;
 
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -13,9 +12,8 @@ import java.util.concurrent.Executors;
 
 import ffmpeg.egg.io.mediacodectest.MainActivity;
 import ffmpeg.egg.io.mediacodectest.R;
-import ffmpeg.egg.io.mediacodectest.decoder.DecoderToOpengl;
-import ffmpeg.egg.io.mediacodectest.encoder.EncoderFormOpengl;
-import ffmpeg.egg.io.mediacodectest.extractor.ExtractorToDecoder;
+import ffmpeg.egg.io.mediacodectest.simple.encoderopengl.DecoderToOpengl;
+import ffmpeg.egg.io.mediacodectest.simple.encoderopengl.EncoderFormOpengl;
 import ffmpeg.egg.io.mediacodectest.utils.DoneCallback;
 
 public class EncoderOpenglActiivity extends AppCompatActivity {

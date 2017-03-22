@@ -18,6 +18,7 @@ import ffmpeg.egg.io.mediacodectest.record.encoder.MediaEncoder;
 import ffmpeg.egg.io.mediacodectest.record.encoder.MediaMuxerWrapper;
 import ffmpeg.egg.io.mediacodectest.record.encoder.MediaVideoEncoder;
 import ffmpeg.egg.io.mediacodectest.record.view.RecordCameraView;
+import ffmpeg.egg.io.mediacodectest.simple.EncoderOpenglActiivity;
 
 public class BeautyActivity extends AppCompatActivity implements View.OnClickListener {
     private RecordCameraView cameraView;

@@ -12,8 +12,8 @@ import java.util.concurrent.Executors;
 
 import ffmpeg.egg.io.mediacodectest.MainActivity;
 import ffmpeg.egg.io.mediacodectest.R;
-import ffmpeg.egg.io.mediacodectest.decoderplay.AudioTrackDecoder;
-import ffmpeg.egg.io.mediacodectest.decoderplay.VideoRenderDecoder;
+import ffmpeg.egg.io.mediacodectest.decoder.AudioTrackDecoder;
+import ffmpeg.egg.io.mediacodectest.decoder.VideoRenderDecoder;
 import ffmpeg.egg.io.mediacodectest.extractor.AudioExtractor;
 import ffmpeg.egg.io.mediacodectest.extractor.VideoExtractor;
 import ffmpeg.egg.io.mediacodectest.utils.StageDoneCallback;
@@ -35,7 +35,6 @@ public class DecoderActivity extends AppCompatActivity {
     private boolean mAudioExtractorDone = false;
     private boolean mVideoExtractorDone = false;
     private boolean mAbort = false;
-    private boolean isRestarting = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +104,7 @@ public class DecoderActivity extends AppCompatActivity {
             @Override
             public void run() {
                 render();
-                release();
+                //release();
             }
         };
     }
@@ -117,7 +116,7 @@ public class DecoderActivity extends AppCompatActivity {
             mExecutor.execute(mVideoExtractorThread);
         }
         while (true) {
-            if (!mAbort || !isConplete()) {
+            if (!mAbort && !isConplete()) {
                 if ((mVideoDecoder != null) && (!mVideoDecoderDone)) {
                     mVideoDecoder.processFrame();
                 }

@@ -1,113 +1,114 @@
-package ffmpeg.egg.io.mediacodectest.decoder;
+package ffmpeg.egg.io.mediacodectest.simple.encoderopengl;
 
 import android.media.MediaCodec;
-import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.util.Log;
+import android.view.Surface;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import ffmpeg.egg.io.mediacodectest.surface.OutputSurface;
-import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
-import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
+import ffmpeg.egg.io.mediacodectest.simple.ExtractorToDecoder;
 import ffmpeg.egg.io.mediacodectest.surface.InputSurface;
+import ffmpeg.egg.io.mediacodectest.surface.SimpleOutputSurface;
 
 /**
- * Created by zhulinping on 17/2/9.
+ * Created by zhulinping on 17/2/7.
  */
 
-public class DecoderFilter {
+public class DecoderToOpengl {
     private MediaCodec mAudioDecoder;
     private MediaCodec mVideoDecoder;
+    private ExtractorToDecoder mExtractor;
     private MediaCodec mAudioEncoder;
     private MediaCodec mVideoEncoder;
     final int TIMEOUT_USEC = 10000;
-    private OutputSurface mOutputSurface;
+    private SimpleOutputSurface mSimpleOutputSurface;
     private InputSurface mInputSurface;
-    TranscodingResources mResources;
-    private MediaFormat mAudioFormat = null;
-    private MediaFormat mVideoFormat = null;
-    private String mPath;
+    Surface surface;
+    int audioIndex = -1;
+    MediaCodec.BufferInfo mAudioBufferInfo = new MediaCodec.BufferInfo();
 
-    public DecoderFilter(String path,TranscodingResources resources, GPUImageFilter filter) {
-        mResources = resources;
-        mPath = path;
-        getMediaFormat();
+
+    public DecoderToOpengl(ExtractorToDecoder extractor) {
+        mExtractor = extractor;
         initDecoder();
-        mOutputSurface.setFilter(filter, true);
+    }
+
+    public DecoderToOpengl(Surface surface,ExtractorToDecoder extractor) {
+        mExtractor = extractor;
+        this.surface = surface;
+        initDecoder();
     }
 
     private void initDecoder() {
         try {
-            String mimeAudio = mAudioFormat.getString(MediaFormat.KEY_MIME);
+            MediaFormat audioFormat = mExtractor.getmAudioFormat();
+            String mimeAudio = audioFormat.getString(MediaFormat.KEY_MIME);
             mAudioDecoder = MediaCodec.createDecoderByType(mimeAudio);
-            mAudioDecoder.configure(mAudioFormat, null, null, 0);
+            mAudioDecoder.configure(audioFormat, null, null, 0);
             mAudioDecoder.start();
 
-            String mimeVideo = mVideoFormat.getString(MediaFormat.KEY_MIME);
+            MediaFormat videoFormat = mExtractor.getmVideoFormat();
+            String mimeVideo = videoFormat.getString(MediaFormat.KEY_MIME);
             mVideoDecoder = MediaCodec.createDecoderByType(mimeVideo);
-            mOutputSurface = new OutputSurface(mResources);
-            mVideoDecoder.configure(mVideoFormat, mOutputSurface.getmSurface(), null, 0);
+            mSimpleOutputSurface = new SimpleOutputSurface();
+            mVideoDecoder.configure(videoFormat, mSimpleOutputSurface.getmSurface(), null, 0);
             //mVideoDecoder.configure(videoFormat,surface, null, 0);
             mVideoDecoder.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void getMediaFormat(){
-        MediaExtractor extractor = new MediaExtractor();
-        try {
-            extractor.setDataSource(mPath);
-            for (int i = 0; i < extractor.getTrackCount(); i++) {
-                MediaFormat format = extractor.getTrackFormat(i);
-                if (format.getString(MediaFormat.KEY_MIME).startsWith("audio/")) {
-                    mAudioFormat = format;
-                    if(mVideoFormat != null){
-                        break;
-                    }
-                }
-                if(format.getString(MediaFormat.KEY_MIME).startsWith("video/")){
-                    mVideoFormat = format;
-                    if(mAudioFormat != null){
-                        break;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void audioDecoder() {
-        MediaCodec.BufferInfo mBufferInfo = new MediaCodec.BufferInfo();
-        int outputIndex = mAudioDecoder.dequeueOutputBuffer(mBufferInfo, 10000L);
-        ByteBuffer[] outputBuffers = mAudioDecoder.getOutputBuffers();
-        ByteBuffer[] inputBuffers = mAudioEncoder.getInputBuffers();
+        if(audioIndex == -1){
+            getAudio();
+        }
+        putAudio();
+    }
+    public void getAudio(){
+        if(mAudioEncoder == null){
+            return;
+        }
+        int outputIndex = mAudioDecoder.dequeueOutputBuffer(mAudioBufferInfo, 10000L);
         if (outputIndex < 0) {
             return;
         }
-        if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
+        if ((mAudioBufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
             mAudioDecoder.releaseOutputBuffer(outputIndex, false);
             return;
         }
+        audioIndex = outputIndex;
+    }
+    public void putAudio(){
+        if(audioIndex == -1){
+            return;
+        }
+        ByteBuffer[] outputBuffers = mAudioDecoder.getOutputBuffers();
+        ByteBuffer[] inputBuffers = mAudioEncoder.getInputBuffers();
         int index = mAudioEncoder.dequeueInputBuffer(TIMEOUT_USEC);
         if (index == -1) {
             Log.d("AUDIODECODER", "no audio encoder input buffer");
             return;
         }
         ByteBuffer localByteBuffer = inputBuffers[index];
-        int size = mBufferInfo.size;
+        int size = mAudioBufferInfo.size;
         if (size >= 0) {
-            ByteBuffer buffer = outputBuffers[outputIndex];
+            ByteBuffer buffer = outputBuffers[audioIndex];
+            buffer.limit(mAudioBufferInfo.offset + mAudioBufferInfo.size);
             localByteBuffer.position(0);
             localByteBuffer.put(buffer);
-            mAudioEncoder.queueInputBuffer(index, 0, size, mBufferInfo.presentationTimeUs, mBufferInfo.flags);
+            mAudioEncoder.queueInputBuffer(index, 0, size, mAudioBufferInfo.presentationTimeUs, mAudioBufferInfo.flags);
         }
-        mAudioDecoder.releaseOutputBuffer(outputIndex, false);
+        mAudioDecoder.releaseOutputBuffer(audioIndex, false);
+        audioIndex = -1;
     }
 
     public void videoDecoder() {
+        if(mVideoEncoder == null){
+            return;
+        }
         MediaCodec.BufferInfo mBufferInfo = new MediaCodec.BufferInfo();
         int decoderStatus = mVideoDecoder.dequeueOutputBuffer(mBufferInfo, TIMEOUT_USEC);
         if (decoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
@@ -120,15 +121,15 @@ public class DecoderFilter {
             MediaFormat newFormat = mVideoDecoder.getOutputFormat();
             Log.d("mytest", "decoder output format changed: " + newFormat);
         } else if (decoderStatus < 0) {
-            Log.d("mytest", "decoder exception" + decoderStatus);
+            Log.d("mytest", "decoder exception"+decoderStatus);
             throw new RuntimeException(
                     "unexpected result from decoder.dequeueOutputBuffer: " +
                             decoderStatus);
         } else { // decoderStatus >= 0
-            if (mBufferInfo.size != 0) {
+            if(mBufferInfo.size != 0){
                 Log.d("mytest", "video output true");
                 mVideoDecoder.releaseOutputBuffer(decoderStatus, true);
-            } else {
+            }else{
                 Log.d("mytest", "video output false");
                 mVideoDecoder.releaseOutputBuffer(decoderStatus, false);
             }
@@ -137,24 +138,24 @@ public class DecoderFilter {
                 Log.d("mytest", "video output EOS");
                 return;
             }
-            Log.d("mytest", "video output info" + mBufferInfo.size + "time" + mBufferInfo.presentationTimeUs);
-            //mOutputSurface.awaitNewImage();
-            mOutputSurface.drawImage();
-            mInputSurface.setPresentationTime(mBufferInfo.presentationTimeUs * 1000);
+            Log.d("mytest", "video output info"+mBufferInfo.size+"time"+mBufferInfo.presentationTimeUs);
+            mSimpleOutputSurface.awaitNewImage();
+            mSimpleOutputSurface.drawImage();
+            mInputSurface.setPresentationTime(mBufferInfo.presentationTimeUs*1000);
             mInputSurface.swapBuffers();
         }
     }
 
-    public void releaseAudio() {
+    public void releaseAudio(){
         mAudioDecoder.stop();
         mAudioDecoder.release();
+        mExtractor.releaseAudioExtractor();
     }
-
-    public void releaseVideo() {
+    public void releaseVideo(){
         mVideoDecoder.stop();
         mVideoDecoder.release();
+        mExtractor.releaseVideoExtractor();
     }
-
     public void setmAudioEncoder(MediaCodec audioEncoder) {
         mAudioEncoder = audioEncoder;
     }
@@ -162,17 +163,13 @@ public class DecoderFilter {
     public void setmVideoEncoder(MediaCodec videoEncoder) {
         mVideoEncoder = videoEncoder;
     }
-
-    public MediaCodec getmAudioDecoder() {
-        return mAudioDecoder;
+    public MediaCodec getmAudioDecoder(){
+        return  mAudioDecoder;
     }
-
-    public MediaCodec getmVideoDecoder() {
+    public MediaCodec getmVideoDecoder(){
         return mVideoDecoder;
     }
-
-    public void setInputSurface(InputSurface surface) {
+    public void setInputSurface(InputSurface surface){
         mInputSurface = surface;
     }
 }
-

@@ -1,4 +1,4 @@
-package ffmpeg.egg.io.mediacodectest.decoderplay;
+package ffmpeg.egg.io.mediacodectest.decoder;
 
 import android.media.AudioFormat;
 import android.media.AudioManager;

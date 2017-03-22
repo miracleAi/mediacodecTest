@@ -10,9 +10,6 @@ import android.widget.Button;
 import ffmpeg.egg.io.mediacodectest.activity.BeautyActivity;
 import ffmpeg.egg.io.mediacodectest.activity.DecoderActivity;
 import ffmpeg.egg.io.mediacodectest.activity.EncoderActivity;
-import ffmpeg.egg.io.mediacodectest.activity.EncoderOpenglActiivity;
-import ffmpeg.egg.io.mediacodectest.activity.EncoderTestActivity;
-import ffmpeg.egg.io.mediacodectest.activity.FilterTestActivity;
 import ffmpeg.egg.io.mediacodectest.activity.EditActivity;
 import ffmpeg.egg.io.mediacodectest.activity.ExtractorActivity;
 
@@ -21,8 +18,6 @@ public class MainActivity extends AppCompatActivity {
     private Button mExtractorBtn;
     private Button mDecoderBtn;
     private Button mEncoderBtn;
-    private Button mOpenglBtn;
-    private Button mFilterBtn;
     private Button mBeautyBtn;
     private Button mEditBtn;
     private String mfilePath;
@@ -40,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
         mExtractorBtn = (Button) findViewById(R.id.extractor_btn);
         mDecoderBtn = (Button) findViewById(R.id.decoder_btn);
         mEncoderBtn = (Button) findViewById(R.id.encoder_btn);
-        mOpenglBtn = (Button) findViewById(R.id.opengl_btn);
-        mFilterBtn = (Button) findViewById(R.id.filter_btn);
         mBeautyBtn = (Button) findViewById(R.id.beauty_btn);
         mEditBtn = (Button) findViewById(R.id.edit_btn);
         mExtractorBtn.setOnClickListener(new View.OnClickListener() {
@@ -64,22 +57,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, EncoderActivity.class);
-                intent.putExtra(PATH,mfilePath);
-                startActivity(intent);
-            }
-        });
-        mOpenglBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EncoderOpenglActiivity.class);
-                intent.putExtra(PATH,mfilePath);
-                startActivity(intent);
-            }
-        });
-        mFilterBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, FilterTestActivity.class);
                 intent.putExtra(PATH,mfilePath);
                 startActivity(intent);
             }

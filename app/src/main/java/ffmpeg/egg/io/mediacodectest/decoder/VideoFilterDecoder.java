@@ -1,15 +1,13 @@
-package ffmpeg.egg.io.mediacodectest.edit.decoder;
+package ffmpeg.egg.io.mediacodectest.decoder;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
-import android.util.Log;
 
 import java.io.IOException;
 
 import ffmpeg.egg.io.mediacodectest.filters.GPUImageFilter;
 import ffmpeg.egg.io.mediacodectest.surface.InputSurface;
 import ffmpeg.egg.io.mediacodectest.surface.OutputSurface;
-import ffmpeg.egg.io.mediacodectest.surface.SimpleOutputSurface;
 import ffmpeg.egg.io.mediacodectest.utils.StageDoneCallback;
 import ffmpeg.egg.io.mediacodectest.utils.TranscodingResources;
 
@@ -114,6 +112,7 @@ public class VideoFilterDecoder {
         if(mVideoDecoder != null){
             mVideoDecoder.stop();
             mVideoDecoder.release();
+            mVideoDecoder = null;
         }
     }
     public void setmInputSurface(InputSurface surface){

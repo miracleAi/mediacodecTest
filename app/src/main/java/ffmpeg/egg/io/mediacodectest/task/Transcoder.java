@@ -8,8 +8,8 @@ import android.media.MediaFormat;
 import java.io.IOException;
 
 import ffmpeg.egg.io.mediacodectest.activity.EditActivity;
-import ffmpeg.egg.io.mediacodectest.decoderplay.AudioDecoder;
-import ffmpeg.egg.io.mediacodectest.decoderplay.VideoDecoder;
+import ffmpeg.egg.io.mediacodectest.decoder.AudioDecoder;
+import ffmpeg.egg.io.mediacodectest.decoder.VideoDecoder;
 import ffmpeg.egg.io.mediacodectest.encoder.AudioEncoder;
 import ffmpeg.egg.io.mediacodectest.encoder.VideoEncoder;
 import ffmpeg.egg.io.mediacodectest.extractor.AudioExtractor;

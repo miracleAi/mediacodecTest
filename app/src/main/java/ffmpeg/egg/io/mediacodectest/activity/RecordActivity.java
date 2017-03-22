@@ -147,7 +147,7 @@ public class RecordActivity extends AppCompatActivity {
                 cameraView.setVideoEncoder(null);
                 cameraView.stopCamera();
                 if (savePath != null && !"".equals(savePath)) {
-                    Intent intent = new Intent(RecordActivity.this, FilterTestActivity.class);
+                    Intent intent = new Intent(RecordActivity.this, EncoderActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -158,7 +158,6 @@ public class RecordActivity extends AppCompatActivity {
 
     public File getCaptureFile(final String type, final String ext) {
         final File dir = new File(Environment.getExternalStoragePublicDirectory(type), DIR_NAME);
-        Log.d(TAG, "path=" + dir.toString());
         dir.mkdirs();
         if (dir.canWrite()) {
             return new File(dir, System.currentTimeMillis() + ext);

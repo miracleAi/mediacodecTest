@@ -4,7 +4,7 @@
     android:id="@+id/activity_encoder_test"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ffmpeg.egg.io.mediacodectest.activity.EncoderTestActivity">
+    tools:context="ffmpeg.egg.io.mediacodectest.simple.EncoderTestActivity">
     <Button
         android:id="@+id/encoder_btn"
         android:layout_width="wrap_content"

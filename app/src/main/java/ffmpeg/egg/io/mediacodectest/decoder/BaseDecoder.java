@@ -1,4 +1,4 @@
-package ffmpeg.egg.io.mediacodectest.decoderplay;
+package ffmpeg.egg.io.mediacodectest.decoder;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
@@ -36,12 +36,15 @@ public abstract class BaseDecoder extends Stage {
 
     public abstract void outputFrame();
 
-    public void release()
-    {
-        if (mDecoder != null) {
-            mDecoder.stop();
-            mDecoder.release();
-            mDecoder = null;
+    public void release() {
+        try {
+            if (mDecoder != null) {
+                mDecoder.stop();
+                mDecoder.release();
+                mDecoder = null;
+            }
+        }catch (IllegalStateException e){
+            e.printStackTrace();
         }
     }
 }

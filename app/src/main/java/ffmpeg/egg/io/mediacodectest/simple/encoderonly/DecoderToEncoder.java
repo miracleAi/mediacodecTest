@@ -1,16 +1,14 @@
-package ffmpeg.egg.io.mediacodectest.decoder;
+package ffmpeg.egg.io.mediacodectest.simple.encoderonly;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import ffmpeg.egg.io.mediacodectest.encoder.Encoder;
-import ffmpeg.egg.io.mediacodectest.extractor.ExtractorToDecoder;
+import ffmpeg.egg.io.mediacodectest.simple.ExtractorToDecoder;
+import ffmpeg.egg.io.mediacodectest.simple.encoderonly.Encoder;
 
 /**
  * Created by zhulinping on 17/2/7.

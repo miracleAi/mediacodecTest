@@ -1,14 +1,12 @@
 package ffmpeg.egg.io.mediacodectest.task;
 
-import android.util.Log;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
-import ffmpeg.egg.io.mediacodectest.decoderplay.AudioTrackDecoder;
-import ffmpeg.egg.io.mediacodectest.edit.decoder.VideoFilterDecoder;
+import ffmpeg.egg.io.mediacodectest.decoder.AudioTrackDecoder;
+import ffmpeg.egg.io.mediacodectest.decoder.VideoFilterDecoder;
 import ffmpeg.egg.io.mediacodectest.extractor.AudioExtractor;
 import ffmpeg.egg.io.mediacodectest.extractor.VideoExtractor;
 import ffmpeg.egg.io.mediacodectest.surface.InputSurface;
