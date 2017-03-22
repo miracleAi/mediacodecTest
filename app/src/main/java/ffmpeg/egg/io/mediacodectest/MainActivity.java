@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import ffmpeg.egg.io.mediacodectest.activity.BeautyActivity;
 import ffmpeg.egg.io.mediacodectest.activity.DecoderActivity;
+import ffmpeg.egg.io.mediacodectest.activity.EncoderActivity;
 import ffmpeg.egg.io.mediacodectest.activity.EncoderOpenglActiivity;
 import ffmpeg.egg.io.mediacodectest.activity.EncoderTestActivity;
 import ffmpeg.egg.io.mediacodectest.activity.FilterTestActivity;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         mEncoderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EncoderTestActivity.class);
+                Intent intent = new Intent(MainActivity.this, EncoderActivity.class);
                 intent.putExtra(PATH,mfilePath);
                 startActivity(intent);
             }
